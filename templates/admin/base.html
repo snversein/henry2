@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Admin - Henri{% endblock %}</title>
+    <title>{% block title %}Admin - Henry's{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     {% block extra_css %}{% endblock %}
@@ -12,7 +12,7 @@
     <div class="flex">
         <aside class="w-64 bg-gray-800 text-white min-h-screen fixed">
             <div class="p-6">
-                <h1 class="text-xl font-bold">Henri Admin</h1>
+                <h1 class="text-xl font-bold">Henry's Admin</h1>
             </div>
             <nav class="mt-4">
                 <a href="{{ url_for('admin_dashboard') }}" class="block px-6 py-3 hover:bg-gray-700 {% if request.endpoint == 'admin_dashboard' %}bg-gray-700{% endif %}">

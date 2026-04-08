@@ -1,215 +1,398 @@
 {% extends "base.html" %}
 
-{% block title %}{{ product.name }} - Henri{% endblock %}
+{% block title %}{{ product.name }} - Henry's Store{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-8">
-    <nav class="flex items-center text-sm text-gray-500 mb-6">
-        <a href="{{ url_for('index') }}" class="hover:text-primary">Home</a>
-        <span class="mx-2">/</span>
-        <a href="{{ url_for('category', category=product.category) }}" class="hover:text-primary">{{ product.category }}</a>
-        <span class="mx-2">/</span>
-        <span class="text-gray-800">{{ product.name }}</span>
-    </nav>
-    
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div class="bg-white rounded-lg shadow-md p-8">
-            <div class="h-80 bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center rounded-lg">
-                <i class="fas fa-spa text-8xl text-primary"></i>
-            </div>
-        </div>
+<div class="bg-white">
+    <div class="container mx-auto px-4 py-8">
+        <nav class="flex items-center text-sm text-gray-500 mb-8">
+            <a href="{{ url_for('index') }}" class="hover:text-green-700 transition">Home</a>
+            <i class="fas fa-chevron-right text-xs mx-3 text-gray-300"></i>
+            <a href="{{ url_for('category', category=product.category) }}" class="hover:text-green-700 transition">{{ product.category }}</a>
+            <i class="fas fa-chevron-right text-xs mx-3 text-gray-300"></i>
+            <span class="text-gray-800 font-medium">{{ product.name }}</span>
+        </nav>
         
-        <div class="bg-white rounded-lg shadow-md p-8">
-            <span class="text-sm text-gray-500 uppercase tracking-wide">{{ product.category }}</span>
-            <h1 class="text-3xl font-bold mt-2">{{ product.name }}</h1>
-            
-            <div class="mt-4">
-                {% if product.demo_price and product.demo_price > product.sale_price %}
-                <span class="text-xl text-gray-400 line-through">₹{{ "%.2f"|format(product.demo_price) }}</span>
-                <span class="text-3xl font-bold text-primary ml-2">₹{{ "%.2f"|format(product.sale_price) }}</span>
-                <span class="ml-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full">Save ₹{{ "%.2f"|format(product.demo_price - product.sale_price) }}</span>
-                {% else %}
-                <span class="text-3xl font-bold text-primary">₹{{ "%.2f"|format(product.sale_price) }}</span>
-                {% endif %}
-            </div>
-            
-            <div class="mt-4 flex items-center">
-                {% if product.current_stock > 0 %}
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-green-100 text-green-800">
-                    <i class="fas fa-check-circle mr-1"></i> In Stock ({{ product.current_stock }} available)
-                </span>
-                {% else %}
-                <span class="inline-flex items-center px-3 py-1 rounded-full text-sm font-medium bg-red-100 text-red-800">
-                    <i class="fas fa-times-circle mr-1"></i> Out of Stock
-                </span>
-                {% endif %}
-            </div>
-            
-            <div class="mt-6 border-t border-b border-gray-200 py-4">
-                <div class="grid grid-cols-2 gap-4">
-                    <div>
-                        <span class="text-gray-500 text-sm">Purchase Price</span>
-                        <p class="font-semibold">₹{{ "%.2f"|format(product.purchase_price) }}</p>
-                    </div>
-                    <div>
-                        <span class="text-gray-500 text-sm">Stock Value</span>
-                        <p class="font-semibold">₹{{ "%.2f"|format(product.current_stock * product.purchase_price) }}</p>
-                    </div>
-                </div>
-            </div>
-            
-            {% if product.current_stock > 0 %}
-            <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST" class="mt-6">
-                <div class="flex items-center gap-4">
-                    <div>
-                        <label class="block text-sm text-gray-500 mb-1">Quantity</label>
-                        <input type="number" name="quantity" value="1" min="1" max="{{ product.current_stock }}" class="border border-gray-300 rounded-lg px-4 py-2 w-20 text-center">
-                    </div>
-                    <button type="submit" class="flex-1 bg-primary text-white py-3 px-6 rounded-lg hover:bg-secondary transition flex items-center justify-center gap-2">
-                        <i class="fas fa-shopping-cart"></i> Add to Cart
-                    </button>
-                </div>
-            </form>
-            {% else %}
-            <button disabled class="w-full bg-gray-300 text-gray-500 py-3 px-6 rounded-lg cursor-not-allowed mt-6">
-                Out of Stock
-            </button>
-            {% endif %}
-            
-            <div class="mt-6 p-4 bg-gray-50 rounded-lg">
-                <h3 class="font-semibold mb-2">Product Details</h3>
-                <div class="text-gray-600 text-sm">
-                    {% if product.description %}
-                    <p class="mb-3">{{ product.description }}</p>
-                    <div class="border-t pt-3 mt-3">
-                        <h4 class="font-medium text-gray-700 mb-2">Key Benefits:</h4>
-                        <ul class="list-disc list-inside space-y-1 text-gray-600">
-                            <li>Premium quality skincare product</li>
-                            <li>Formulated for all skin types</li>
-                            <li>Free from harmful chemicals</li>
-                            <li>Dermatologically tested</li>
-                        </ul>
-                    </div>
-                    <div class="border-t pt-3 mt-3">
-                        <h4 class="font-medium text-gray-700 mb-2">How to Use:</h4>
-                        <p class="text-gray-600">Apply a small amount to clean skin. Gently massage in circular motions until fully absorbed. Use regularly for best results.</p>
-                    </div>
-                    <div class="border-t pt-3 mt-3">
-                        <h4 class="font-medium text-gray-700 mb-2">Ingredients:</h4>
-                        <p class="text-gray-600">Water, Glycerin, Vitamin E, Natural Extracts, Preservatives.</p>
-                    </div>
+        <div class="grid lg:grid-cols-2 gap-12">
+            <div>
+                <div class="relative bg-gray-100 rounded-3xl overflow-hidden aspect-square">
+                    {% if product.image_url %}
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-full object-cover" id="main-product-image">
                     {% else %}
-                    <p>No description available.</p>
+                    <div class="w-full h-full flex items-center justify-center">
+                        <i class="fas fa-spa text-9xl text-gray-300"></i>
+                    </div>
+                    {% endif %}
+                    {% if product.demo_price and product.demo_price > product.sale_price %}
+                    <div class="absolute top-6 left-6">
+                        <span class="badge-sale text-white text-sm px-4 py-2 rounded-full font-semibold">
+                            {{ ((1 - product.sale_price/product.demo_price)*100)|round|int }}% OFF
+                        </span>
+                    </div>
                     {% endif %}
                 </div>
-            </div>
-        </div>
-    </div>
-    
-    <div class="mt-12">
-        <h2 class="text-2xl font-bold mb-6">Customer Reviews</h2>
-        
-        <div class="bg-white rounded-lg shadow-md p-6 mb-6">
-            <div class="flex items-center gap-4 mb-4">
-                <div class="text-4xl font-bold text-primary">{{ "%.1f"|format(avg_rating) }}</div>
-                <div>
-                    <div class="flex items-center">
-                        {% for i in range(5) %}
-                            {% if i < avg_rating|int %}
-                                <i class="fas fa-star text-yellow-400"></i>
-                            {% elif i < avg_rating %}
-                                <i class="fas fa-star-half-alt text-yellow-400"></i>
-                            {% else %}
-                                <i class="far fa-star text-gray-300"></i>
-                            {% endif %}
+                
+                {% if related_products %}
+                <div class="mt-8">
+                    <h3 class="text-lg font-semibold mb-4">Related Products</h3>
+                    <div class="grid grid-cols-4 gap-4">
+                        {% for rp in related_products %}
+                        <a href="{{ url_for('product_detail', product_id=rp.id) }}" class="group">
+                            <div class="aspect-square rounded-xl overflow-hidden bg-gray-100">
+                                {% if rp.image_url %}
+                                <img src="{{ rp.image_url }}" alt="{{ rp.name }}" class="w-full h-full object-cover group-hover:scale-105 transition">
+                                {% else %}
+                                <div class="w-full h-full flex items-center justify-center">
+                                    <i class="fas fa-spa text-2xl text-gray-300"></i>
+                                </div>
+                                {% endif %}
+                            </div>
+                            <p class="text-sm font-medium mt-2 line-clamp-2">{{ rp.name }}</p>
+                            <p class="text-sm font-bold text-green-700">₹{{ "%.0f"|format(rp.sale_price) }}</p>
+                        </a>
                         {% endfor %}
                     </div>
-                    <p class="text-sm text-gray-500">{{ ratings|length }} reviews</p>
+                </div>
+                {% endif %}
+            </div>
+            
+            <div>
+                <span class="text-sm text-green-700 font-medium uppercase tracking-wider">{{ product.category }}</span>
+                <h1 class="text-3xl lg:text-4xl font-bold mt-2 mb-4">{{ product.name }}</h1>
+                
+                <div class="flex items-center gap-4 mb-6">
+                    <div class="flex items-center">
+                        {% for i in range(5) %}
+                        <i class="fas fa-star text-yellow-400"></i>
+                        {% endfor %}
+                    </div>
+                    <span class="text-gray-500">({{ ratings|length }} reviews)</span>
+                    <span class="text-green-600 flex items-center gap-1">
+                        <i class="fas fa-check-circle"></i> In Stock
+                    </span>
+                </div>
+                
+                <div class="mb-8">
+                    {% if product.demo_price and product.demo_price > product.sale_price %}
+                    <div class="flex items-baseline gap-3">
+                        <span class="text-4xl font-bold text-gray-900">₹{{ "%.0f"|format(product.sale_price) }}</span>
+                        <span class="text-xl text-gray-400 line-through">₹{{ "%.0f"|format(product.demo_price) }}</span>
+                        <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">
+                            Save ₹{{ "%.0f"|format(product.demo_price - product.sale_price) }}
+                        </span>
+                    </div>
+                    {% else %}
+                    <span class="text-4xl font-bold text-gray-900">₹{{ "%.0f"|format(product.sale_price) }}</span>
+                    {% endif %}
+                </div>
+                
+                <div class="bg-green-50 rounded-2xl p-6 mb-8">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                                <i class="fas fa-truck text-green-700"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium">Free Shipping</p>
+                                <p class="text-xs text-gray-500">On orders above ₹499</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                                <i class="fas fa-shield-alt text-green-700"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium">100% Authentic</p>
+                                <p class="text-xs text-gray-500">Genuine product</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                                <i class="fas fa-undo text-green-700"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium">Easy Returns</p>
+                                <p class="text-xs text-gray-500">7 days return policy</p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-green-100 flex items-center justify-center">
+                                <i class="fas fa-headset text-green-700"></i>
+                            </div>
+                            <div>
+                                <p class="text-sm font-medium">24/7 Support</p>
+                                <p class="text-xs text-gray-500">Expert help</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {% if product.current_stock > 0 %}
+                <form action="{{ url_for('add_to_cart', product_id=product.id) }}" method="POST" class="mb-8">
+                    <div class="flex items-center gap-4 mb-6">
+                        <label class="text-sm font-medium text-gray-700">Quantity:</label>
+                        <div class="flex items-center border border-gray-200 rounded-xl overflow-hidden">
+                            <button type="button" onclick="decrementQty()" class="px-4 py-3 hover:bg-green-50 transition">
+                                <i class="fas fa-minus text-gray-600"></i>
+                            </button>
+                            <input type="number" name="quantity" id="quantity" value="1" min="1" max="{{ product.current_stock }}" class="w-16 text-center border-x border-gray-200 py-3 focus:outline-none focus:border-green-500">
+                            <button type="button" onclick="incrementQty()" class="px-4 py-3 hover:bg-green-50 transition">
+                                <i class="fas fa-plus text-gray-600"></i>
+                            </button>
+                        </div>
+                        <span class="text-sm text-gray-500">{{ product.current_stock }} available</span>
+                    </div>
+                    <div class="flex flex-col sm:flex-row gap-4">
+                        <button type="submit" class="flex-1 btn-primary text-white py-4 px-8 rounded-xl font-semibold flex items-center justify-center gap-2">
+                            <i class="fas fa-shopping-bag"></i> Add to Cart
+                        </button>
+                        <a href="{{ url_for('checkout') }}" class="flex-1 bg-green-800 text-white py-4 px-8 rounded-xl font-semibold flex items-center justify-center gap-2 hover:bg-green-900 transition">
+                            Buy Now
+                        </a>
+                    </div>
+                </form>
+                {% else %}
+                <div class="bg-red-50 border border-red-200 rounded-xl p-6 mb-8 text-center">
+                    <i class="fas fa-exclamation-circle text-red-500 text-2xl mb-2"></i>
+                    <p class="text-red-700 font-medium">This product is currently out of stock</p>
+                    <p class="text-red-600 text-sm mt-1">Please check back later or browse similar products</p>
+                </div>
+                {% endif %}
+                
+                <div class="border-t pt-8">
+                    <div class="flex items-center gap-4 mb-6">
+                        <i class="fas fa-heart text-green-700 text-xl"></i>
+                        <p class="text-gray-600">Add to wishlist</p>
+                    </div>
+                    <div class="flex items-center gap-4 text-sm text-gray-500">
+                        <i class="fas fa-share-alt"></i>
+                        <span>Share:</span>
+                        <a href="#" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-green-700 hover:text-white transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-green-700 hover:text-white transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-8 h-8 rounded-full bg-gray-100 flex items-center justify-center hover:bg-green-700 hover:text-white transition">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mt-16 grid lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2">
+                <div class="bg-white border rounded-2xl overflow-hidden">
+                    <div class="border-b">
+                        <div class="flex">
+                            <button class="tab-btn px-6 py-4 font-semibold text-green-700 border-b-2 border-green-700" data-tab="description">Description</button>
+                            <button class="tab-btn px-6 py-4 font-semibold text-gray-500 hover:text-gray-700" data-tab="benefits">Benefits</button>
+                            <button class="tab-btn px-6 py-4 font-semibold text-gray-500 hover:text-gray-700" data-tab="how-to-use">How to Use</button>
+                            <button class="tab-btn px-6 py-4 font-semibold text-gray-500 hover:text-gray-700" data-tab="ingredients">Ingredients</button>
+                        </div>
+                    </div>
+                    <div class="p-8">
+                        <div id="description" class="tab-content">
+                            <p class="text-gray-600 leading-relaxed">{{ product.description }}</p>
+                        </div>
+                        <div id="benefits" class="tab-content hidden">
+                            <ul class="space-y-4">
+                                <li class="flex items-start gap-3">
+                                    <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <i class="fas fa-check text-green-600 text-xs"></i>
+                                    </div>
+                                    <span class="text-gray-600">Premium quality formulation</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <i class="fas fa-check text-green-600 text-xs"></i>
+                                    </div>
+                                    <span class="text-gray-600">Formulated for all skin types</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <i class="fas fa-check text-green-600 text-xs"></i>
+                                    </div>
+                                    <span class="text-gray-600">Free from harmful chemicals</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <i class="fas fa-check text-green-600 text-xs"></i>
+                                    </div>
+                                    <span class="text-gray-600">Dermatologically tested</span>
+                                </li>
+                                <li class="flex items-start gap-3">
+                                    <div class="w-6 h-6 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0 mt-0.5">
+                                        <i class="fas fa-check text-green-600 text-xs"></i>
+                                    </div>
+                                    <span class="text-gray-600">Visible results in 4-6 weeks</span>
+                                </li>
+                            </ul>
+                        </div>
+                        <div id="how-to-use" class="tab-content hidden">
+                            <ol class="space-y-4">
+                                <li class="flex items-start gap-4">
+                                    <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                                        <span class="text-green-700 font-bold">1</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-1">Cleanse</h4>
+                                        <p class="text-gray-600 text-sm">Start with clean, dry skin</p>
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-4">
+                                    <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                                        <span class="text-green-700 font-bold">2</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-1">Apply</h4>
+                                        <p class="text-gray-600 text-sm">Take a small amount and apply evenly</p>
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-4">
+                                    <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                                        <span class="text-green-700 font-bold">3</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-1">Massage</h4>
+                                        <p class="text-gray-600 text-sm">Gently massage in circular motions</p>
+                                    </div>
+                                </li>
+                                <li class="flex items-start gap-4">
+                                    <div class="w-8 h-8 rounded-full bg-green-100 flex items-center justify-center flex-shrink-0">
+                                        <span class="text-green-700 font-bold">4</span>
+                                    </div>
+                                    <div>
+                                        <h4 class="font-semibold mb-1">Consistency</h4>
+                                        <p class="text-gray-600 text-sm">Use regularly for best results</p>
+                                    </div>
+                                </li>
+                            </ol>
+                        </div>
+                        <div id="ingredients" class="tab-content hidden">
+                            <p class="text-gray-600">Water, Glycerin, Vitamin E, Natural Extracts, Preservatives, Fragrance. For complete ingredient list, please refer to the product packaging.</p>
+                        </div>
+                    </div>
                 </div>
             </div>
             
-            <form action="{{ url_for('rate_product', product_id=product.id) }}" method="POST" class="border-t pt-4">
-                <h3 class="font-semibold mb-4">Write a Review</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                    <div>
-                        <label class="block text-sm text-gray-500 mb-1">Your Name</label>
-                        <input type="text" name="customer_name" required class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-primary">
-                    </div>
-                    <div>
-                        <label class="block text-sm text-gray-500 mb-1">Rating</label>
-                        <select name="rating" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-primary">
-                            <option value="5">5 Stars - Excellent</option>
-                            <option value="4">4 Stars - Very Good</option>
-                            <option value="3">3 Stars - Good</option>
-                            <option value="2">2 Stars - Fair</option>
-                            <option value="1">1 Star - Poor</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="mb-4">
-                    <label class="block text-sm text-gray-500 mb-1">Your Review (optional)</label>
-                    <textarea name="review" rows="3" class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:border-primary"></textarea>
-                </div>
-                <button type="submit" class="bg-primary text-white px-6 py-2 rounded-lg hover:bg-secondary transition">
-                    Submit Review
-                </button>
-            </form>
-        </div>
-        
-        {% if ratings %}
-        <div class="space-y-4">
-            {% for rating in ratings %}
-            <div class="bg-white rounded-lg shadow-md p-6">
-                <div class="flex items-start justify-between">
-                    <div>
-                        <div class="flex items-center gap-2">
-                            <span class="font-semibold">{{ rating.customer_name }}</span>
-                            <div class="flex">
+            <div>
+                <div class="bg-white border rounded-2xl p-6">
+                    <h3 class="text-lg font-semibold mb-6">Customer Reviews</h3>
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="text-4xl font-bold text-gray-900">{{ "%.1f"|format(avg_rating) }}</div>
+                        <div>
+                            <div class="flex items-center">
                                 {% for i in range(5) %}
-                                    {% if i < rating.rating %}
-                                        <i class="fas fa-star text-yellow-400 text-sm"></i>
+                                    {% if i < avg_rating|int %}
+                                        <i class="fas fa-star text-yellow-400"></i>
+                                    {% elif i < avg_rating %}
+                                        <i class="fas fa-star-half-alt text-yellow-400"></i>
                                     {% else %}
-                                        <i class="far fa-star text-gray-300 text-sm"></i>
+                                        <i class="far fa-star text-gray-300"></i>
                                     {% endif %}
                                 {% endfor %}
                             </div>
+                            <p class="text-sm text-gray-500 mt-1">{{ ratings|length }} reviews</p>
                         </div>
-                        <p class="text-sm text-gray-500 mt-1">{{ rating.created_at.strftime('%B %d, %Y') }}</p>
                     </div>
+                    
+                    <form action="{{ url_for('rate_product', product_id=product.id) }}" method="POST" class="border-t pt-6">
+                        <h4 class="font-semibold mb-4">Write a Review</h4>
+                        <div class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Your Name</label>
+                                <input type="text" name="customer_name" required class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-green-500">
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Rating</label>
+                                <div class="flex items-center gap-2">
+                                    {% for i in range(5, 0, -1) %}
+                                    <label class="cursor-pointer">
+                                        <input type="radio" name="rating" value="{{ i }}" class="hidden peer" {% if i == 5 %}checked{% endif %}>
+                                        <i class="fas fa-star text-gray-300 peer-checked:text-yellow-400 hover:text-yellow-400 transition"></i>
+                                    </label>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Your Review</label>
+                                <textarea name="review" rows="3" class="w-full border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-green-500" placeholder="Share your experience..."></textarea>
+                            </div>
+                            <button type="submit" class="w-full btn-primary text-white py-3 rounded-xl font-semibold">
+                                Submit Review
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        {% if ratings %}
+        <div class="mt-8 space-y-6">
+            {% for rating in ratings %}
+            <div class="bg-white border rounded-2xl p-6">
+                <div class="flex items-start justify-between mb-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-12 h-12 rounded-full bg-gradient-to-br from-green-600 to-green-800 flex items-center justify-center text-white font-semibold">
+                            {{ rating.customer_name[:1]|upper }}
+                        </div>
+                        <div>
+                            <h4 class="font-semibold">{{ rating.customer_name }}</h4>
+                            <div class="flex items-center gap-2">
+                                <div class="flex items-center">
+                                    {% for i in range(5) %}
+                                        {% if i < rating.rating %}
+                                        <i class="fas fa-star text-yellow-400 text-xs"></i>
+                                        {% else %}
+                                        <i class="far fa-star text-gray-300 text-xs"></i>
+                                        {% endif %}
+                                    {% endfor %}
+                                </div>
+                                <span class="text-xs text-gray-500">{{ rating.created_at.strftime('%B %d, %Y') }}</span>
+                            </div>
+                        </div>
+                    </div>
+                    <span class="bg-green-100 text-green-700 text-xs px-2 py-1 rounded-full">Verified</span>
                 </div>
                 {% if rating.review %}
-                <p class="mt-3 text-gray-600">{{ rating.review }}</p>
+                <p class="text-gray-600">{{ rating.review }}</p>
                 {% endif %}
             </div>
             {% endfor %}
         </div>
-        {% else %}
-        <div class="bg-white rounded-lg shadow-md p-6 text-center">
-            <p class="text-gray-500">No reviews yet. Be the first to review this product!</p>
-        </div>
         {% endif %}
     </div>
-    
-    {% if related_products %}
-    <div class="mt-12">
-        <h2 class="text-2xl font-bold mb-6">Related Products</h2>
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
-            {% for rp in related_products %}
-            <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-                <div class="h-40 bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center">
-                    <i class="fas fa-spa text-4xl text-primary"></i>
-                </div>
-                <div class="p-4">
-                    <h3 class="font-semibold">{{ rp.name }}</h3>
-                    <div class="flex items-center justify-between mt-2">
-                        <span class="text-lg font-bold text-primary">₹{{ "%.2f"|format(rp.sale_price) }}</span>
-                        <a href="{{ url_for('product_detail', product_id=rp.id) }}" class="text-primary hover:underline text-sm">View</a>
-                    </div>
-                </div>
-            </div>
-            {% endfor %}
-        </div>
-    </div>
-    {% endif %}
 </div>
+
+<script>
+function decrementQty() {
+    var input = document.getElementById('quantity');
+    var val = parseInt(input.value);
+    if (val > 1) input.value = val - 1;
+}
+
+function incrementQty() {
+    var input = document.getElementById('quantity');
+    var val = parseInt(input.value);
+    var max = parseInt(input.max);
+    if (val < max) input.value = val + 1;
+}
+
+document.querySelectorAll('.tab-btn').forEach(function(btn) {
+    btn.addEventListener('click', function() {
+        document.querySelectorAll('.tab-btn').forEach(function(b) {
+            b.classList.remove('text-green-700', 'border-b-2', 'border-green-700');
+            b.classList.add('text-gray-500');
+        });
+        document.querySelectorAll('.tab-content').forEach(function(c) {
+            c.classList.add('hidden');
+        });
+        this.classList.add('text-green-700', 'border-b-2', 'border-green-700');
+        this.classList.remove('text-gray-500');
+        document.getElementById(this.dataset.tab).classList.remove('hidden');
+    });
+});
+</script>
 {% endblock %}

@@ -1,67 +1,107 @@
 {% extends "base.html" %}
 
-{% block title %}My Orders - Henri{% endblock %}
+{% block title %}My Orders - Henry's Store{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-8">My Orders</h1>
-    
-    {% if orders %}
-    <div class="space-y-4">
-        {% for order in orders %}
-        <div class="bg-white rounded-lg shadow-md overflow-hidden">
-            <div class="p-4 bg-gray-50 flex flex-wrap items-center justify-between gap-4">
-                <div>
-                    <span class="font-semibold">{{ order.order_number }}</span>
-                    <span class="text-gray-500 ml-2">{{ order.created_at.strftime('%Y-%m-%d %H:%M') }}</span>
-                </div>
-                <span class="px-3 py-1 rounded-full text-sm font-medium 
-                    {% if order.status == 'pending' %}bg-yellow-100 text-yellow-800
-                    {% elif order.status == 'processing' %}bg-blue-100 text-blue-800
-                    {% elif order.status == 'shipped' %}bg-purple-100 text-purple-800
-                    {% elif order.status == 'delivered' %}bg-green-100 text-green-800
-                    {% else %}bg-red-100 text-red-800{% endif %}">
-                    {{ order.status|title }}
-                </span>
-            </div>
-            <div class="p-4">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div>
-                        <h3 class="font-semibold mb-2">Items</h3>
-                        <div class="space-y-1">
-                            {% for item in order.items %}
-                            <div class="flex justify-between text-sm">
-                                <span>{{ item.product_name }} x {{ item.quantity }}</span>
-                                <span>₹{{ "%.2f"|format(item.total) }}</span>
-                            </div>
-                            {% endfor %}
+<div class="bg-gray-50 min-h-screen py-8">
+    <div class="container mx-auto px-4">
+        <h1 class="text-3xl font-bold mb-8">My Orders</h1>
+        
+        {% if orders %}
+        <div class="space-y-6">
+            {% for order in orders %}
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+                <div class="bg-gray-50 px-6 py-4 flex flex-wrap items-center justify-between gap-4 border-b">
+                    <div class="flex items-center gap-4">
+                        <div>
+                            <span class="font-bold text-green-700">{{ order.order_number }}</span>
+                            <span class="text-gray-400 ml-3 text-sm">{{ order.created_at.strftime('%B %d, %Y at %H:%M') if order.created_at else '' }}</span>
                         </div>
                     </div>
-                    <div>
-                        <h3 class="font-semibold mb-2">Shipping Address</h3>
-                        <p class="text-sm text-gray-600">{{ order.shipping_address }}</p>
-                        <p class="text-sm text-gray-500 mt-2">{{ order.customer_phone }}</p>
+                    <span class="px-4 py-2 rounded-full text-sm font-medium 
+                        {% if order.status == 'pending' %}bg-yellow-100 text-yellow-700
+                        {% elif order.status == 'processing' %}bg-blue-100 text-blue-700
+                        {% elif order.status == 'shipped' %}bg-purple-100 text-purple-700
+                        {% elif order.status == 'delivered' %}bg-green-100 text-green-700
+                        {% else %}bg-red-100 text-red-700{% endif %}">
+                        {% if order.status == 'pending' %}<i class="fas fa-clock mr-1"></i>{% endif %}
+                        {% if order.status == 'processing' %}<i class="fas fa-cog mr-1"></i>{% endif %}
+                        {% if order.status == 'shipped' %}<i class="fas fa-truck mr-1"></i>{% endif %}
+                        {% if order.status == 'delivered' %}<i class="fas fa-check-circle mr-1"></i>{% endif %}
+                        {{ order.status|title }}
+                    </span>
+                </div>
+                <div class="p-6">
+                    <div class="grid md:grid-cols-3 gap-6">
+                        <div>
+                            <h3 class="font-semibold mb-3 flex items-center gap-2">
+                                <i class="fas fa-box text-green-700"></i> Items
+                            </h3>
+                            <div class="space-y-2">
+                                {% for item in order.items %}
+                                <div class="flex justify-between text-sm items-center">
+                                    <span class="text-gray-600">{{ item.product_name }} × {{ item.quantity }}</span>
+                                    <span class="font-medium">₹{{ "%.0f"|format(item.total) }}</span>
+                                </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold mb-3 flex items-center gap-2">
+                                <i class="fas fa-map-marker-alt text-green-700"></i> Shipping Address
+                            </h3>
+                            <p class="text-gray-600 text-sm">{{ order.shipping_address }}</p>
+                            <p class="text-gray-500 text-sm mt-2">
+                                <i class="fas fa-phone mr-1"></i> {{ order.customer_phone }}
+                            </p>
+                        </div>
+                        <div>
+                            <h3 class="font-semibold mb-3 flex items-center gap-2">
+                                <i class="fas fa-credit-card text-green-700"></i> Payment
+                            </h3>
+                            <p class="text-gray-600 text-sm">
+                                {% if order.payment_method == 'cod' %}
+                                <i class="fas fa-money-bill-wave text-green-600 mr-1"></i> Cash on Delivery
+                                {% else %}
+                                <i class="fas fa-credit-card text-blue-600 mr-1"></i> Online Payment
+                                {% endif %}
+                            </p>
+                            <p class="text-2xl font-bold text-green-700 mt-2">₹{{ "%.0f"|format(order.total) }}</p>
+                        </div>
+                    </div>
+                    
+                    <div class="border-t mt-6 pt-6 flex flex-wrap items-center justify-between gap-4">
+                        <div class="flex items-center gap-2">
+                            {% if order.status == 'pending' %}
+                            <span class="text-yellow-600 text-sm"><i class="fas fa-info-circle mr-1"></i> Order is being reviewed</span>
+                            {% elif order.status == 'processing' %}
+                            <span class="text-blue-600 text-sm"><i class="fas fa-cog mr-1"></i> Preparing your order</span>
+                            {% elif order.status == 'shipped' %}
+                            <span class="text-purple-600 text-sm"><i class="fas fa-truck mr-1"></i> On the way</span>
+                            {% elif order.status == 'delivered' %}
+                            <span class="text-green-600 text-sm"><i class="fas fa-check-circle mr-1"></i> Delivered</span>
+                            {% endif %}
+                        </div>
+                        <a href="{{ url_for('admin_order_detail', order_id=order.id) }}" class="btn-primary text-white px-6 py-2 rounded-xl font-medium text-sm">
+                            View Details <i class="fas fa-arrow-right ml-1"></i>
+                        </a>
                     </div>
                 </div>
-                <div class="border-t mt-4 pt-4 flex justify-between items-center">
-                    <div class="text-lg font-bold">Total: ₹{{ "%.2f"|format(order.total) }}</div>
-                    <a href="{{ url_for('admin_order_detail', order_id=order.id) }}" class="text-primary hover:underline">
-                        View Details
-                    </a>
-                </div>
             </div>
+            {% endfor %}
         </div>
-        {% endfor %}
+        {% else %}
+        <div class="text-center py-20 bg-white rounded-3xl">
+            <div class="w-32 h-32 mx-auto mb-8 rounded-full bg-gray-100 flex items-center justify-center">
+                <i class="fas fa-box-open text-5xl text-gray-300"></i>
+            </div>
+            <h2 class="text-2xl font-semibold text-gray-600 mb-3">No orders yet</h2>
+            <p class="text-gray-400 mb-8 max-w-md mx-auto">Looks like you haven't placed any orders yet. Start shopping to see your orders here!</p>
+            <a href="{{ url_for('index') }}" class="btn-primary text-white px-8 py-4 rounded-xl font-semibold inline-flex items-center gap-2">
+                Start Shopping <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+        {% endif %}
     </div>
-    {% else %}
-    <div class="text-center py-16">
-        <i class="fas fa-box-open text-6xl text-gray-300 mb-4"></i>
-        <h2 class="text-2xl font-semibold text-gray-600 mb-2">No orders yet</h2>
-        <p class="text-gray-500 mb-6">Start shopping to see your orders here.</p>
-        <a href="{{ url_for('index') }}" class="inline-block bg-primary text-white px-6 py-3 rounded-lg hover:bg-secondary transition">
-            Start Shopping
-        </a>
-    </div>
-    {% endif %}
 </div>
 {% endblock %}

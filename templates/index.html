@@ -1,93 +1,372 @@
 {% extends "base.html" %}
 
-{% block title %}Henri - Beauty & Skincare{% endblock %}
+{% block title %}Henry's Store - Premium Beauty & Skincare Products{% endblock %}
 
 {% block content %}
-<div class="bg-gradient-to-r from-amber-50 to-orange-50 py-12">
-    <div class="container mx-auto px-4">
-        <h1 class="text-4xl font-bold text-gray-800 mb-4">Discover Your Beauty</h1>
-        <p class="text-gray-600 text-lg">Premium skincare and beauty products at your fingertips</p>
-    </div>
-</div>
-
-<div class="container mx-auto px-4 py-8">
-    <div class="flex flex-col lg:flex-row gap-8">
-        <aside class="lg:w-1/4">
-            <div class="bg-white rounded-lg shadow-md p-6 sticky top-24">
-                <h2 class="text-lg font-semibold mb-4">Categories</h2>
-                <div class="space-y-2">
-                    <a href="{{ url_for('index') }}" class="block px-4 py-2 rounded-lg {% if not current_category %}bg-primary text-white{% else %}text-gray-600 hover:bg-gray-100{% endif %}">
-                        All Products
-                    </a>
-                    {% set unique_categories = products|map(attribute='category')|unique|list %}
-                    {% for cat in unique_categories %}
-                    <a href="{{ url_for('category', category=cat) }}" class="block px-4 py-2 rounded-lg {% if current_category == cat %}bg-primary text-white{% else %}text-gray-600 hover:bg-gray-100{% endif %}">
-                        {{ cat }}
-                    </a>
-                    {% endfor %}
+<section class="relative overflow-hidden">
+    <div class="gradient-primary min-h-[600px] lg:min-h-[500px] flex items-center">
+        <div class="absolute inset-0 opacity-10">
+            <div class="absolute top-20 left-20 w-72 h-72 bg-green-400 rounded-full filter blur-3xl"></div>
+            <div class="absolute bottom-20 right-20 w-96 h-96 bg-green-200 rounded-full filter blur-3xl"></div>
+        </div>
+        <div class="container mx-auto px-4 py-16 relative z-10">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <div class="text-white">
+                    <span class="inline-block px-4 py-2 bg-white/10 rounded-full text-sm font-medium mb-6 backdrop-blur">
+                        <i class="fas fa-star text-yellow-400 mr-2"></i>Trusted by 50,000+ Customers
+                    </span>
+                    <h1 class="text-4xl lg:text-6xl font-bold leading-tight mb-6">
+                        Discover Your
+                        <span class="text-gradient">Natural Beauty</span>
+                    </h1>
+                    <p class="text-lg text-white/80 mb-8 max-w-lg">
+                        Premium skincare and beauty products crafted with natural ingredients. Transform your skin with our scientifically formulated solutions.
+                    </p>
+                    <div class="flex flex-wrap gap-4">
+                        <a href="#products" class="btn-primary text-white px-8 py-4 rounded-xl font-semibold inline-flex items-center gap-2">
+                            Shop Now <i class="fas fa-arrow-right"></i>
+                        </a>
+                        <a href="#best-sellers" class="bg-white/10 backdrop-blur text-white px-8 py-4 rounded-xl font-semibold hover:bg-white/20 transition inline-flex items-center gap-2">
+                            <i class="fas fa-play-circle"></i> Best Sellers
+                        </a>
+                    </div>
+                    <div class="flex items-center gap-8 mt-10">
+                        <div>
+                            <h4 class="text-3xl font-bold">50K+</h4>
+                            <p class="text-sm text-white/60">Happy Customers</p>
+                        </div>
+                        <div class="w-px h-12 bg-white/20"></div>
+                        <div>
+                            <h4 class="text-3xl font-bold">100%</h4>
+                            <p class="text-sm text-white/60">Natural Ingredients</p>
+                        </div>
+                        <div class="w-px h-12 bg-white/20"></div>
+                        <div>
+                            <h4 class="text-3xl font-bold">4.8★</h4>
+                            <p class="text-sm text-white/60">Average Rating</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="hidden lg:block relative">
+                    <div class="absolute -top-10 -right-10 w-full h-full bg-gradient-to-br from-green-400/30 to-green-200/30 rounded-3xl"></div>
+                    <img src="https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600&h=600&fit=crop" alt="Beauty Products" class="relative rounded-3xl shadow-2xl floating">
+                    <div class="absolute -bottom-6 -left-6 bg-white rounded-2xl p-4 shadow-xl">
+                        <div class="flex items-center gap-3">
+                            <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                                <i class="fas fa-check text-green-600"></i>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-gray-800">Quality Assured</p>
+                                <p class="text-sm text-gray-500">Dermatologically Tested</p>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </aside>
+        </div>
+    </div>
+</section>
+
+<section class="py-12 bg-white">
+    <div class="container mx-auto px-4">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-6">
+            <div class="trust-badge rounded-xl p-6 text-center">
+                <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
+                    <i class="fas fa-truck text-2xl text-green-700"></i>
+                </div>
+                <h4 class="font-semibold mb-1">Free Shipping</h4>
+                <p class="text-sm text-gray-500">On orders above ₹499</p>
+            </div>
+            <div class="trust-badge rounded-xl p-6 text-center">
+                <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
+                    <i class="fas fa-shield-alt text-2xl text-green-700"></i>
+                </div>
+                <h4 class="font-semibold mb-1">100% Authentic</h4>
+                <p class="text-sm text-gray-500">Genuine products</p>
+            </div>
+            <div class="trust-badge rounded-xl p-6 text-center">
+                <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
+                    <i class="fas fa-undo text-2xl text-green-700"></i>
+                </div>
+                <h4 class="font-semibold mb-1">Easy Returns</h4>
+                <p class="text-sm text-gray-500">7 days return policy</p>
+            </div>
+            <div class="trust-badge rounded-xl p-6 text-center">
+                <div class="w-14 h-14 mx-auto mb-4 rounded-full bg-green-100 flex items-center justify-center">
+                    <i class="fas fa-headset text-2xl text-green-700"></i>
+                </div>
+                <h4 class="font-semibold mb-1">24/7 Support</h4>
+                <p class="text-sm text-gray-500">Expert assistance</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+{% if not search_query and not current_category %}
+<section id="categories" class="py-16">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <span class="text-green-700 font-medium uppercase tracking-wider text-sm">Shop by Category</span>
+            <h2 class="text-3xl lg:text-4xl font-bold mt-2">Explore Our Collections</h2>
+        </div>
+        <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {% set categories = [
+                {'name': 'Hair Care', 'icon': 'fa-cut', 'color': 'from-green-600 to-green-800'},
+                {'name': 'Skin Care', 'icon': 'fa-spa', 'color': 'from-green-500 to-emerald-600'},
+                {'name': 'Face Care', 'icon': 'fa-leaf', 'color': 'from-green-400 to-teal-500'},
+                {'name': 'Body Care', 'icon': 'fa-heart', 'color': 'from-green-700 to-green-900'},
+                {'name': 'Baby Care', 'icon': 'fa-baby', 'color': 'from-emerald-500 to-green-600'},
+                {'name': 'Medicine', 'icon': 'fa-pills', 'color': 'from-teal-500 to-green-600'}
+            ] %}
+            {% for cat in categories %}
+            <a href="{{ url_for('category', category=cat.name) if cat.name != 'Medicine' else url_for('index') }}" class="category-card relative h-40 rounded-2xl overflow-hidden group">
+                <div class="absolute inset-0 bg-gradient-to-br {{ cat.color }} opacity-90"></div>
+                <div class="absolute inset-0 flex flex-col items-center justify-center text-white z-10 p-4">
+                    <i class="fas {{ cat.icon }} text-4xl mb-3 group-hover:scale-110 transition"></i>
+                    <span class="font-semibold text-center">{{ cat.name }}</span>
+                </div>
+            </a>
+            {% endfor %}
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<section id="products" class="py-16">
+    <div class="container mx-auto px-4">
+        <div class="flex flex-col md:flex-row md:items-center md:justify-between mb-12">
+            <div>
+                {% if search_query %}
+                <span class="text-green-700 font-medium uppercase tracking-wider text-sm">Search Results</span>
+                <h2 class="text-3xl lg:text-4xl font-bold mt-2">"{{ search_query }}"</h2>
+                <p class="text-gray-500 mt-2">{{ products|length }} products found</p>
+                {% elif current_category %}
+                <span class="text-green-700 font-medium uppercase tracking-wider text-sm">{{ current_category }}</span>
+                <h2 class="text-3xl lg:text-4xl font-bold mt-2">Shop {{ current_category }}</h2>
+                <p class="text-gray-500 mt-2">{{ products|length }} products available</p>
+                {% else %}
+                <span class="text-green-700 font-medium uppercase tracking-wider text-sm">Our Collection</span>
+                <h2 class="text-3xl lg:text-4xl font-bold mt-2">All Products</h2>
+                {% endif %}
+            </div>
+            <div class="flex items-center gap-4 mt-4 md:mt-0">
+                <a href="{{ url_for('index') }}" class="px-4 py-2 rounded-lg border {% if not current_category %}bg-green-800 text-white{% else %}text-gray-600 hover:bg-gray-100{% endif %} transition">
+                    All
+                </a>
+                {% set unique_cats = products|map(attribute='category')|unique|list %}
+                {% for cat in unique_cats[:4] %}
+                <a href="{{ url_for('category', category=cat) }}" class="px-4 py-2 rounded-lg border {% if current_category == cat %}bg-green-800 text-white{% else %}text-gray-600 hover:bg-gray-100{% endif %} transition">
+                    {{ cat }}
+                </a>
+                {% endfor %}
+            </div>
+        </div>
         
-        <div class="lg:w-3/4">
-            {% if search_query %}
-            <div class="mb-6">
-                <h2 class="text-2xl font-semibold">Search Results for "{{ search_query }}"</h2>
-                <p class="text-gray-600">{{ products|length }} products found</p>
-            </div>
-            {% elif current_category %}
-            <div class="mb-6">
-                <h2 class="text-2xl font-semibold">{{ current_category }}</h2>
-                <p class="text-gray-600">{{ products|length }} products</p>
-            </div>
-            {% endif %}
-            
-            {% if products %}
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
-                {% for product in products %}
-                <div class="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-xl transition-shadow">
-                    <div class="h-48 bg-gradient-to-br from-amber-100 to-orange-100 flex items-center justify-center">
-                        <i class="fas fa-spa text-6xl text-primary"></i>
+        {% if products %}
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+            {% for product in products %}
+            <div class="bg-white rounded-2xl shadow-sm overflow-hidden card-hover group">
+                <div class="relative aspect-square overflow-hidden">
+                    {% if product.image_url %}
+                    <img src="{{ product.image_url }}" alt="{{ product.name }}" class="w-full h-full object-cover group-hover:scale-105 transition duration-500">
+                    {% else %}
+                    <div class="w-full h-full product-image flex items-center justify-center">
+                        <i class="fas fa-spa text-6xl text-gray-300"></i>
                     </div>
-                    <div class="p-4">
-                        <span class="text-xs text-gray-500 uppercase tracking-wide">{{ product.category }}</span>
-                        <h3 class="text-lg font-semibold mt-1">{{ product.name }}</h3>
-                        <div class="flex items-center justify-between mt-3">
+                    {% endif %}
+                    <div class="absolute top-3 left-3 flex flex-col gap-2">
+                        {% if product.demo_price and product.demo_price > product.sale_price %}
+                        <span class="badge-sale text-white text-xs px-3 py-1 rounded-full font-medium">
+                            {{ ((1 - product.sale_price/product.demo_price)*100)|round|int }}% OFF
+                        </span>
+                        {% endif %}
+                        {% if product.current_stock <= 5 and product.current_stock > 0 %}
+                        <span class="bg-orange-500 text-white text-xs px-3 py-1 rounded-full font-medium">
+                            Only {{ product.current_stock }} left
+                        </span>
+                        {% endif %}
+                    </div>
+                    {% if product.current_stock <= 0 %}
+                    <div class="absolute inset-0 bg-black/50 flex items-center justify-center">
+                        <span class="bg-white text-gray-800 px-4 py-2 rounded-full font-semibold">Out of Stock</span>
+                    </div>
+                    {% endif %}
+                    <div class="absolute inset-0 bg-black/0 group-hover:bg-black/10 transition"></div>
+                </div>
+                <div class="p-5">
+                    <span class="text-xs text-gray-400 uppercase tracking-wide">{{ product.category }}</span>
+                    <h3 class="font-semibold text-gray-800 mt-1 mb-2 line-clamp-2">{{ product.name }}</h3>
+                    <div class="flex items-center gap-2 mb-3">
+                        <div class="flex items-center">
+                            {% for i in range(5) %}
+                            <i class="fas fa-star text-yellow-400 text-xs"></i>
+                            {% endfor %}
+                        </div>
+                        <span class="text-xs text-gray-400">({{ ratings|length if ratings else 0 }})</span>
+                    </div>
+                    <div class="flex items-center justify-between">
+                        <div>
                             {% if product.demo_price and product.demo_price > product.sale_price %}
-                            <div>
-                                <span class="text-sm text-gray-400 line-through">₹{{ "%.2f"|format(product.demo_price) }}</span>
-                                <span class="text-xl font-bold text-primary">₹{{ "%.2f"|format(product.sale_price) }}</span>
-                            </div>
-                            {% else %}
-                            <span class="text-xl font-bold text-primary">₹{{ "%.2f"|format(product.sale_price) }}</span>
+                            <span class="text-sm text-gray-400 line-through">₹{{ "%.0f"|format(product.demo_price) }}</span>
                             {% endif %}
-                            {% if product.current_stock > 0 %}
-                            <span class="text-xs text-green-600"><i class="fas fa-check-circle"></i> In Stock</span>
-                            {% else %}
-                            <span class="text-xs text-red-500"><i class="fas fa-times-circle"></i> Out of Stock</span>
-                            {% endif %}
+                            <span class="text-xl font-bold text-gray-900">₹{{ "%.0f"|format(product.sale_price) }}</span>
                         </div>
                         {% if product.current_stock > 0 %}
-                        <a href="{{ url_for('product_detail', product_id=product.id) }}" class="block w-full bg-primary text-white text-center py-2 mt-3 rounded-lg hover:bg-secondary transition">
-                            View Details
+                        <a href="{{ url_for('product_detail', product_id=product.id) }}" class="btn-primary text-white px-5 py-2 rounded-xl font-medium text-sm">
+                            Add to Cart
                         </a>
                         {% else %}
-                        <button disabled class="block w-full bg-gray-300 text-gray-500 text-center py-2 mt-3 rounded-lg cursor-not-allowed">
+                        <button disabled class="bg-gray-200 text-gray-500 px-5 py-2 rounded-xl font-medium text-sm cursor-not-allowed">
                             Out of Stock
                         </button>
                         {% endif %}
                     </div>
                 </div>
-                {% endfor %}
             </div>
-            {% else %}
-            <div class="text-center py-12">
-                <i class="fas fa-search text-6xl text-gray-300 mb-4"></i>
-                <p class="text-gray-500 text-lg">No products found</p>
-                <a href="{{ url_for('index') }}" class="inline-block mt-4 text-primary hover:underline">Browse all products</a>
+            {% endfor %}
+        </div>
+        {% else %}
+        <div class="text-center py-20">
+            <div class="w-24 h-24 mx-auto mb-6 rounded-full bg-gray-100 flex items-center justify-center">
+                <i class="fas fa-search text-4xl text-gray-300"></i>
             </div>
-            {% endif %}
+            <h3 class="text-2xl font-semibold text-gray-600 mb-2">No products found</h3>
+            <p class="text-gray-400 mb-6">Try adjusting your search or browse our categories</p>
+            <a href="{{ url_for('index') }}" class="btn-primary text-white px-8 py-3 rounded-xl font-semibold inline-flex items-center gap-2">
+                Browse All Products <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+        {% endif %}
+    </div>
+</section>
+
+<section id="offers" class="py-16 bg-gradient-to-r from-green-700 to-green-900 text-white">
+    <div class="container mx-auto px-4">
+        <div class="grid lg:grid-cols-2 gap-12 items-center">
+            <div>
+                <span class="inline-block px-4 py-2 bg-white/20 rounded-full text-sm font-medium mb-6">
+                    Limited Time Offer
+                </span>
+                <h2 class="text-3xl lg:text-5xl font-bold mb-6">Get 20% Off on Your First Order!</h2>
+                <p class="text-lg text-white/80 mb-8">Use code <strong class="text-green-300">HENRY20</strong> at checkout. Valid for new customers only.</p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#products" class="bg-white text-green-700 px-8 py-4 rounded-xl font-semibold hover:bg-green-100 transition inline-flex items-center gap-2">
+                        Shop Now <i class="fas fa-arrow-right"></i>
+                    </a>
+                </div>
+            </div>
+            <div class="hidden lg:flex justify-center">
+                <div class="relative">
+                    <div class="w-64 h-64 bg-white/20 rounded-full flex items-center justify-center">
+                        <div class="w-48 h-48 bg-white/20 rounded-full flex items-center justify-center">
+                            <div class="w-32 h-32 bg-white rounded-full flex items-center justify-center">
+                                <span class="text-green-700 text-4xl font-bold">20%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
+</section>
+
+<section class="py-16">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <span class="text-green-700 font-medium uppercase tracking-wider text-sm">Why Choose Us</span>
+            <h2 class="text-3xl lg:text-4xl font-bold mt-2">The Henry's Advantage</h2>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="text-center p-8 bg-white rounded-2xl shadow-sm">
+                <div class="w-20 h-20 mx-auto mb-6 rounded-full gradient-accent flex items-center justify-center">
+                    <i class="fas fa-leaf text-3xl text-white"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">Natural Ingredients</h3>
+                <p class="text-gray-500">All our products are formulated with natural, scientifically-backed ingredients that are gentle on your skin.</p>
+            </div>
+            <div class="text-center p-8 bg-white rounded-2xl shadow-sm">
+                <div class="w-20 h-20 mx-auto mb-6 rounded-full gradient-primary flex items-center justify-center">
+                    <i class="fas fa-flask text-3xl text-white"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">Dermatologically Tested</h3>
+                <p class="text-gray-500">Every product undergoes rigorous testing to ensure safety and efficacy before reaching you.</p>
+            </div>
+            <div class="text-center p-8 bg-white rounded-2xl shadow-sm">
+                <div class="w-20 h-20 mx-auto mb-6 rounded-full gradient-gold flex items-center justify-center">
+                    <i class="fas fa-award text-3xl text-white"></i>
+                </div>
+                <h3 class="text-xl font-semibold mb-3">Premium Quality</h3>
+                <p class="text-gray-500">We source the finest ingredients and maintain strict quality control throughout our production process.</p>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section class="py-16 bg-green-50">
+    <div class="container mx-auto px-4">
+        <div class="text-center mb-12">
+            <span class="text-green-700 font-medium uppercase tracking-wider text-sm">Testimonials</span>
+            <h2 class="text-3xl lg:text-4xl font-bold mt-2">What Our Customers Say</h2>
+        </div>
+        <div class="grid md:grid-cols-3 gap-8">
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-green-100">
+                <div class="flex items-center gap-1 mb-4">
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <i class="fas fa-star text-yellow-400"></i>
+                </div>
+                <p class="text-gray-600 mb-6">"I've tried so many products for my hair fall, but Henry's CUHAIR tablets finally gave me results! My hair is thicker and stronger now."</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                        <span class="text-green-700 font-semibold">PS</span>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold">Priya Sharma</h4>
+                        <p class="text-sm text-gray-400">Verified Buyer</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-green-100">
+                <div class="flex items-center gap-1 mb-4">
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <i class="fas fa-star text-yellow-400"></i>
+                </div>
+                <p class="text-gray-600 mb-6">"The skinumet cream has transformed my skin! Dark spots have faded significantly and my complexion is much more even now."</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                        <span class="text-green-700 font-semibold">RK</span>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold">Rahul Kumar</h4>
+                        <p class="text-sm text-gray-400">Verified Buyer</p>
+                    </div>
+                </div>
+            </div>
+            <div class="bg-white p-8 rounded-2xl shadow-sm border border-green-100">
+                <div class="flex items-center gap-1 mb-4">
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <i class="fas fa-star text-yellow-400"></i>
+                    <i class="fas fa-star-half-alt text-yellow-400"></i>
+                </div>
+                <p class="text-gray-600 mb-6">"Best sunscreen I've ever used! ROOFS SPF doesn't feel greasy and provides excellent protection. Perfect for Indian weather!"</p>
+                <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-full bg-green-100 flex items-center justify-center">
+                        <span class="text-green-700 font-semibold">AM</span>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold">Anita Mehra</h4>
+                        <p class="text-sm text-gray-400">Verified Buyer</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
 {% endblock %}

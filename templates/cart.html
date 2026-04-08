@@ -1,92 +1,183 @@
 {% extends "base.html" %}
 
-{% block title %}Shopping Cart - Henri{% endblock %}
+{% block title %}Shopping Cart - Henry's Store{% endblock %}
 
 {% block content %}
-<div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-8">Shopping Cart</h1>
-    
-    {% if cart_items %}
-    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        <div class="lg:col-span-2">
-            <div class="bg-white rounded-lg shadow-md overflow-hidden">
-                <div class="p-4 bg-gray-50 border-b">
-                    <div class="grid grid-cols-6 gap-4 text-sm font-semibold text-gray-600">
-                        <div class="col-span-3">Product</div>
-                        <div class="text-center">Price</div>
-                        <div class="text-center">Quantity</div>
-                        <div class="text-right">Total</div>
+<div class="bg-gray-50 min-h-screen py-8">
+    <div class="container mx-auto px-4">
+        <h1 class="text-3xl font-bold mb-8">Shopping Cart</h1>
+        
+        {% if cart_items %}
+        <div class="grid lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2">
+                <div class="bg-white rounded-2xl shadow-sm overflow-hidden">
+                    <div class="bg-gray-50 border-b px-6 py-4">
+                        <div class="grid grid-cols-12 gap-4 text-sm font-semibold text-gray-600">
+                            <div class="col-span-6">Product</div>
+                            <div class="col-span-2 text-center">Price</div>
+                            <div class="col-span-2 text-center">Quantity</div>
+                            <div class="col-span-2 text-right">Total</div>
+                        </div>
                     </div>
+                    
+                    {% for item in cart_items %}
+                    <div class="p-6 border-b">
+                        <div class="grid grid-cols-12 gap-4 items-center">
+                            <div class="col-span-6 flex items-center gap-4">
+                                <div class="w-24 h-24 rounded-xl overflow-hidden bg-gray-100 flex-shrink-0">
+                                    {% if item.product.image_url %}
+                                    <img src="{{ item.product.image_url }}" alt="{{ item.product.name }}" class="w-full h-full object-cover">
+                                    {% else %}
+                                    <div class="w-full h-full flex items-center justify-center">
+                                        <i class="fas fa-spa text-2xl text-gray-300"></i>
+                                    </div>
+                                    {% endif %}
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold">{{ item.product.name }}</h3>
+                                    <p class="text-sm text-gray-500">{{ item.product.category }}</p>
+                                </div>
+                            </div>
+                            <div class="col-span-2 text-center">
+                                ₹{{ "%.0f"|format(item.product.sale_price) }}
+                            </div>
+                            <div class="col-span-2 flex justify-center">
+                                <form action="{{ url_for('update_cart', product_id=item.product.id) }}" method="POST" class="flex items-center">
+                                    <button type="button" onclick="this.parentElement.querySelector('input').stepDown(); this.form.submit();" class="w-8 h-8 rounded-l-lg border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition">
+                                        <i class="fas fa-minus text-xs"></i>
+                                    </button>
+                                    <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.product.current_stock }}" class="w-12 h-8 border-y border-gray-200 text-center text-sm focus:outline-none" readonly>
+                                    <button type="button" onclick="this.parentElement.querySelector('input').stepUp(); this.form.submit();" class="w-8 h-8 rounded-r-lg border border-gray-200 flex items-center justify-center hover:bg-gray-100 transition">
+                                        <i class="fas fa-plus text-xs"></i>
+                                    </button>
+                                </form>
+                            </div>
+                            <div class="col-span-2 text-right">
+                                <span class="font-bold text-lg">₹{{ "%.0f"|format(item.total) }}</span>
+                            </div>
+                        </div>
+                        <div class="mt-4 flex items-center justify-between">
+                            <span class="text-sm {% if item.product.current_stock > 0 %}text-green-600{% else %}text-red-500{% endif %}">
+                                {% if item.product.current_stock > 0 %}
+                                <i class="fas fa-check-circle"></i> In Stock
+                                {% else %}
+                                <i class="fas fa-times-circle"></i> Out of Stock
+                                {% endif %}
+                            </span>
+                            <a href="{{ url_for('remove_from_cart', product_id=item.product.id) }}" class="text-red-500 hover:text-red-700 text-sm font-medium flex items-center gap-1 transition">
+                                <i class="fas fa-trash-alt"></i> Remove
+                            </a>
+                        </div>
+                    </div>
+                    {% endfor %}
                 </div>
                 
-                {% for item in cart_items %}
-                <div class="p-4 border-b">
-                    <div class="grid grid-cols-6 gap-4 items-center">
-                        <div class="col-span-3 flex items-center gap-4">
-                            <div class="w-16 h-16 bg-gradient-to-br from-amber-100 to-orange-100 rounded-lg flex items-center justify-center">
-                                <i class="fas fa-spa text-xl text-primary"></i>
-                            </div>
-                            <div>
-                                <h3 class="font-semibold">{{ item.product.name }}</h3>
-                                <p class="text-sm text-gray-500">{{ item.product.category }}</p>
-                            </div>
+                <div class="mt-6 flex items-center justify-between">
+                    <a href="{{ url_for('index') }}" class="text-green-700 hover:text-green-800 font-medium flex items-center gap-2 transition">
+                        <i class="fas fa-arrow-left"></i> Continue Shopping
+                    </a>
+                </div>
+            </div>
+            
+            <div class="lg:col-span-1">
+                <div class="bg-white rounded-2xl shadow-sm p-6 sticky top-24">
+                    <h2 class="text-xl font-bold mb-6">Order Summary</h2>
+                    
+                    <div class="space-y-4 pb-6 border-b">
+                        <div class="flex justify-between text-gray-600">
+                            <span>Subtotal ({{ cart_items|length }} items)</span>
+                            <span>₹{{ "%.0f"|format(subtotal) }}</span>
                         </div>
-                        <div class="text-center">₹{{ "%.2f"|format(item.product.sale_price) }}</div>
-                        <div class="text-center">
-                            <form action="{{ url_for('update_cart', product_id=item.product.id) }}" method="POST" class="inline-flex items-center">
-                                <input type="number" name="quantity" value="{{ item.quantity }}" min="1" max="{{ item.product.current_stock }}" class="border border-gray-300 rounded px-2 py-1 w-16 text-center">
-                                <button type="submit" class="ml-2 text-primary hover:text-secondary">
-                                    <i class="fas fa-sync-alt"></i>
-                                </button>
-                            </form>
+                        <div class="flex justify-between text-gray-600">
+                            <span>Shipping</span>
+                            <span class="text-green-600 font-medium">FREE</span>
                         </div>
-                        <div class="text-right font-semibold">₹{{ "%.2f"|format(item.total) }}</div>
+                        {% if subtotal < 499 %}
+                        <div class="bg-orange-50 text-orange-700 p-3 rounded-lg text-sm">
+                            <i class="fas fa-info-circle mr-2"></i>
+                            Add ₹{{ (499 - subtotal)|round|int }} more for free shipping!
+                        </div>
+                        {% endif %}
                     </div>
-                    <div class="mt-2 text-right">
-                        <a href="{{ url_for('remove_from_cart', product_id=item.product.id) }}" class="text-red-500 hover:text-red-700 text-sm">
-                            <i class="fas fa-trash"></i> Remove
+                    
+                    <div class="py-6 border-b">
+                        <div class="flex justify-between items-center">
+                            <span class="text-lg font-semibold">Total</span>
+                            <span class="text-2xl font-bold text-green-700">₹{{ "%.0f"|format(total) }}</span>
+                        </div>
+                        {% if subtotal >= 499 %}
+                        <p class="text-sm text-green-600 mt-2">
+                            <i class="fas fa-check-circle"></i> You're getting free shipping!
+                        </p>
+                        {% endif %}
+                    </div>
+                    
+                    <div class="mt-6 space-y-4">
+                        <div class="bg-gray-50 rounded-xl p-4">
+                            <div class="flex items-center gap-2 mb-2">
+                                <i class="fas fa-tag text-green-700"></i>
+                                <span class="font-medium text-sm">Apply Coupon</span>
+                            </div>
+                            <div class="flex gap-2">
+                                <input type="text" placeholder="Enter code" class="flex-1 border border-gray-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:border-green-500" id="coupon-code">
+                                <button class="bg-gray-900 text-white px-4 py-2 rounded-lg text-sm font-medium hover:bg-gray-800 transition">Apply</button>
+                            </div>
+                        </div>
+                        
+                        <a href="{{ url_for('checkout') }}" class="block w-full btn-primary text-white text-center py-4 rounded-xl font-semibold flex items-center justify-center gap-2">
+                            Proceed to Checkout <i class="fas fa-arrow-right"></i>
                         </a>
+                        
+                        <div class="flex items-center justify-center gap-4 mt-4">
+                            <div class="flex items-center gap-1 text-sm text-gray-500">
+                                <i class="fas fa-lock"></i> Secure Checkout
+                            </div>
+                            <div class="flex items-center gap-1 text-sm text-gray-500">
+                                <i class="fas fa-shield-alt"></i> SSL Encrypted
+                            </div>
+                        </div>
                     </div>
+                    
+                    <div class="mt-6 pt-6 border-t">
+                        <h4 class="font-medium mb-3">We Accept</h4>
+                        <div class="flex items-center gap-3 text-gray-400">
+                            <i class="fab fa-cc-visa text-2xl"></i>
+                            <i class="fab fa-cc-mastercard text-2xl"></i>
+                            <i class="fab fa-google-pay text-2xl"></i>
+                            <i class="fab fa-apple-pay text-2xl"></i>
+                            <span class="text-sm">UPI</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        <div class="text-center py-20 bg-white rounded-2xl">
+            <div class="w-32 h-32 mx-auto mb-8 rounded-full bg-gray-100 flex items-center justify-center">
+                <i class="fas fa-shopping-bag text-5xl text-gray-300"></i>
+            </div>
+            <h2 class="text-2xl font-semibold text-gray-600 mb-3">Your cart is empty</h2>
+            <p class="text-gray-400 mb-8 max-w-md mx-auto">Looks like you haven't added any products to your cart yet. Start shopping to fill it up!</p>
+            <a href="{{ url_for('index') }}" class="btn-primary text-white px-8 py-4 rounded-xl font-semibold inline-flex items-center gap-2">
+                Start Shopping <i class="fas fa-arrow-right"></i>
+            </a>
+        </div>
+        
+        <div class="mt-12">
+            <h3 class="text-xl font-bold mb-6">You May Also Like</h3>
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                {% for i in range(6) %}
+                <div class="bg-white rounded-xl p-4 shadow-sm">
+                    <div class="aspect-square rounded-lg bg-gray-100 mb-3 flex items-center justify-center">
+                        <i class="fas fa-spa text-3xl text-gray-300"></i>
+                    </div>
+                    <h4 class="font-medium text-sm line-clamp-2">Product Name</h4>
+                    <p class="font-bold text-green-700 mt-1">₹299</p>
                 </div>
                 {% endfor %}
             </div>
         </div>
-        
-        <div class="lg:col-span-1">
-            <div class="bg-white rounded-lg shadow-md p-6 sticky top-24">
-                <h2 class="text-xl font-semibold mb-4">Order Summary</h2>
-                <div class="space-y-3 border-b pb-4">
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">Subtotal</span>
-                        <span class="font-semibold">₹{{ "%.2f"|format(subtotal) }}</span>
-                    </div>
-                    <div class="flex justify-between">
-                        <span class="text-gray-600">Shipping</span>
-                        <span class="font-semibold text-green-600">Free</span>
-                    </div>
-                </div>
-                <div class="flex justify-between py-4">
-                    <span class="text-lg font-semibold">Total</span>
-                    <span class="text-lg font-bold text-primary">₹{{ "%.2f"|format(total) }}</span>
-                </div>
-                <a href="{{ url_for('checkout') }}" class="block w-full bg-primary text-white text-center py-3 rounded-lg hover:bg-secondary transition">
-                    Proceed to Checkout
-                </a>
-                <a href="{{ url_for('index') }}" class="block w-full text-center py-3 text-gray-600 hover:text-primary transition">
-                    Continue Shopping
-                </a>
-            </div>
-        </div>
+        {% endif %}
     </div>
-    {% else %}
-    <div class="text-center py-16">
-        <i class="fas fa-shopping-cart text-6xl text-gray-300 mb-4"></i>
-        <h2 class="text-2xl font-semibold text-gray-600 mb-2">Your cart is empty</h2>
-        <p class="text-gray-500 mb-6">Looks like you haven't added anything to your cart yet.</p>
-        <a href="{{ url_for('index') }}" class="inline-block bg-primary text-white px-6 py-3 rounded-lg hover:bg-secondary transition">
-            Start Shopping
-        </a>
-    </div>
-    {% endif %}
 </div>
 {% endblock %}

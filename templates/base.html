@@ -3,72 +3,294 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Henri - Beauty & Skincare{% endblock %}</title>
+    <title>{% block title %}Henry's Store - Premium Beauty & Skincare{% endblock %}</title>
     <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        .category-btn.active {
-            background-color: #d4a574;
-            color: white;
+        :root {
+            --primary: #14532d;
+            --secondary: #166534;
+            --accent: #15803d;
+            --gold: #16a34a;
+            --cream: #f0fdf4;
+            --success: #22c55e;
+        }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: var(--cream);
+            color: #333;
+        }
+        .gradient-primary {
+            background: linear-gradient(135deg, #14532d 0%, #166534 50%, #15803d 100%);
+        }
+        .gradient-accent {
+            background: linear-gradient(135deg, #15803d 0%, #16a34a 100%);
+        }
+        .gradient-gold {
+            background: linear-gradient(135deg, #16a34a 0%, #22c55e 100%);
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #15803d 0%, #16a34a 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .card-hover {
+            transition: all 0.3s ease;
+        }
+        .card-hover:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 40px rgba(20, 83, 45, 0.15);
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, #15803d 0%, #16a34a 100%);
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px rgba(21, 128, 61, 0.4);
+        }
+        .product-image {
+            background: linear-gradient(135deg, #f0fdf4 0%, #dcfce7 100%);
+        }
+        .badge-sale {
+            background: linear-gradient(135deg, #dc2626 0%, #ef4444 100%);
+        }
+        .badge-new {
+            background: linear-gradient(135deg, #15803d 0%, #16a34a 100%);
+        }
+        .trust-badge {
+            background: white;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.05);
+        }
+        .nav-link {
+            position: relative;
+        }
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            width: 0;
+            height: 2px;
+            background: #15803d;
+            transition: width 0.3s ease;
+        }
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        .category-card {
+            position: relative;
+            overflow: hidden;
+            border-radius: 16px;
+        }
+        .category-card::before {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(180deg, transparent 0%, rgba(20, 83, 45, 0.8) 100%);
+            z-index: 1;
+        }
+        .category-card img {
+            transition: transform 0.5s ease;
+        }
+        .category-card:hover img {
+            transform: scale(1.1);
+        }
+        .floating {
+            animation: floating 3s ease-in-out infinite;
+        }
+        @keyframes floating {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .pulse {
+            animation: pulse 2s infinite;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+        .nav-item:hover {
+            transform: translateY(-2px);
+        }
+        .nav-item {
+            transition: all 0.3s ease;
+        }
+        .nav-item:hover i {
+            transform: scale(1.1);
+        }
+        .nav-item i {
+            transition: transform 0.3s ease;
         }
     </style>
     {% block extra_css %}{% endblock %}
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
-    <header class="bg-white shadow-md sticky top-0 z-50">
+<body class="min-h-screen flex flex-col font-['Poppins']">
+    <!-- Top Bar -->
+    <div class="bg-gradient-to-r from-green-800 via-green-700 to-green-800 text-white shadow-lg">
+        <div class="container mx-auto px-4">
+            <div class="flex items-center justify-between py-2.5 text-sm">
+                <div class="flex items-center gap-6">
+                    <span class="flex items-center gap-2">
+                        <i class="fas fa-phone-alt"></i>
+                        <span>+91 98765 43210</span>
+                    </span>
+                    <span class="hidden md:flex items-center gap-2">
+                        <i class="fas fa-envelope"></i>
+                        <span>contact@henrysstore.com</span>
+                    </span>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="hidden sm:flex items-center gap-2 bg-white/20 px-4 py-1.5 rounded-full backdrop-blur-sm">
+                        <i class="fas fa-truck"></i>
+                        <span>Free Shipping Above ₹499</span>
+                    </span>
+                    <button onclick="toggleLanguage()" class="flex items-center gap-2 bg-white text-green-800 hover:bg-green-100 px-4 py-1.5 rounded-full transition-all duration-300 shadow-md hover:shadow-lg font-semibold">
+                        <span id="flag-icon" class="text-lg">🇮🇳</span>
+                        <span id="lang-text" class="text-xs">हिंदी</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Main Navigation -->
+    <header class="bg-white shadow-lg sticky top-0 z-50 backdrop-blur-lg bg-white/95">
         <div class="container mx-auto px-4">
             <div class="flex items-center justify-between py-4">
-                <a href="{{ url_for('index') }}" class="text-2xl font-bold text-gray-800">Henri</a>
+                <!-- Logo -->
+                <a href="{{ url_for('index') }}" class="flex items-center gap-3 group">
+                    <div class="w-12 h-12 bg-gradient-to-br from-green-700 to-green-900 rounded-xl flex items-center justify-center shadow-lg group-hover:shadow-xl transition-all duration-300 transform group-hover:scale-105">
+                        <span class="text-white font-bold text-xl">H</span>
+                    </div>
+                    <div>
+                        <h1 class="text-2xl font-bold bg-gradient-to-r from-gray-800 to-gray-600 bg-clip-text text-transparent">Henry's</h1>
+                        <p class="text-xs text-gray-500 -mt-1">Beauty & Skincare</p>
+                    </div>
+                </a>
                 
-                <nav class="hidden md:flex items-center space-x-6">
-                    <a href="{{ url_for('index') }}" class="text-gray-600 hover:text-primary transition">Home</a>
+                <!-- Desktop Navigation -->
+                <nav class="hidden lg:flex items-center gap-1">
+                    <a href="{{ url_for('index') }}" class="nav-item px-5 py-2 rounded-full text-gray-700 hover:bg-gradient-to-r hover:from-green-700 hover:to-green-800 hover:text-white transition-all duration-300 font-medium flex items-center gap-2">
+                        <i class="fas fa-home"></i> Home
+                    </a>
                     <div class="relative group">
-                        <button class="text-gray-600 hover:text-primary transition">Categories</button>
-                        <div class="absolute left-0 mt-2 w-48 bg-white shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                            {% for cat in g.categories if g.categories %}
-                            <a href="{{ url_for('category', category=cat) }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">{{ cat }}</a>
-                            {% endfor %}
+                        <button class="nav-item px-5 py-2 rounded-full text-gray-700 hover:bg-gradient-to-r hover:from-green-700 hover:to-green-800 hover:text-white transition-all duration-300 font-medium flex items-center gap-2">
+                            <i class="fas fa-th-large"></i> Shop <i class="fas fa-chevron-down text-xs"></i>
+                        </button>
+                        <div class="absolute top-full left-1/2 -translate-x-1/2 mt-2 w-80 bg-white shadow-2xl rounded-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 overflow-hidden">
+                            <div class="p-4">
+                                <p class="text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Categories</p>
+                                <div class="grid grid-cols-2 gap-2">
+                                    {% for cat in g.categories[:6] if g.categories %}
+                                    <a href="{{ url_for('category', category=cat) }}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-gradient-to-r hover:from-green-100 hover:to-green-200 text-gray-600 hover:text-green-800 transition-all">
+                                        <div class="w-8 h-8 bg-green-100 rounded-lg flex items-center justify-center">
+                                            <i class="fas fa-circle text-[8px] text-green-700"></i>
+                                        </div>
+                                        <span class="text-sm font-medium">{{ cat }}</span>
+                                    </a>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="bg-gradient-to-r from-green-700 to-green-800 p-3">
+                                <a href="{{ url_for('index') }}" class="flex items-center justify-center gap-2 text-white font-semibold hover:gap-3 transition-all">
+                                    View All Products <i class="fas fa-arrow-right"></i>
+                                </a>
+                            </div>
                         </div>
                     </div>
+                    <a href="#best-sellers" class="nav-item px-5 py-2 rounded-full text-gray-700 hover:bg-gradient-to-r hover:from-green-700 hover:to-green-800 hover:text-white transition-all duration-300 font-medium flex items-center gap-2">
+                        <i class="fas fa-fire"></i> Best Sellers
+                    </a>
+                    <a href="#offers" class="nav-item px-5 py-2 rounded-full text-gray-700 hover:bg-gradient-to-r hover:from-green-700 hover:to-green-800 hover:text-white transition-all duration-300 font-medium flex items-center gap-2">
+                        <i class="fas fa-tags"></i> Offers
+                    </a>
                 </nav>
                 
-                <div class="flex items-center space-x-4">
-                    <form action="{{ url_for('search') }}" method="get" class="hidden md:flex">
-                        <input type="text" name="q" placeholder="Search products..." class="border border-gray-300 rounded-l-lg px-4 py-2 focus:outline-none focus:border-primary">
-                        <button type="submit" class="bg-primary text-white px-4 py-2 rounded-r-lg hover:bg-secondary transition">
-                            <i class="fas fa-search"></i>
-                        </button>
+                <!-- Right Section -->
+                <div class="flex items-center gap-3">
+                    <!-- Search Bar -->
+                    <form action="{{ url_for('search') }}" method="get" class="hidden md:flex relative">
+                        <input type="text" name="q" placeholder="Search products..." class="w-64 border-2 border-gray-100 rounded-full px-5 py-2.5 pl-12 focus:outline-none focus:border-green-700 transition-all text-sm bg-gray-50 focus:bg-white">
+                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
                     </form>
                     
-                    <a href="{{ url_for('cart') }}" class="relative text-gray-600 hover:text-primary transition">
-                        <i class="fas fa-shopping-cart text-xl"></i>
+                    <!-- Wishlist -->
+                    <button class="w-10 h-10 rounded-full bg-gray-50 hover:bg-green-50 text-gray-600 hover:text-green-700 transition-all flex items-center justify-center">
+                        <i class="far fa-heart"></i>
+                    </button>
+                    
+                    <!-- Cart -->
+                    <a href="{{ url_for('cart') }}" class="relative w-10 h-10 rounded-full bg-gray-50 hover:bg-green-50 text-gray-600 hover:text-green-700 transition-all flex items-center justify-center">
+                        <i class="fas fa-shopping-bag"></i>
                         {% if session.get('cart') and session.get('cart')|length > 0 %}
-                        <span class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">{{ session.get('cart')|length }}</span>
+                        <span class="absolute -top-1 -right-1 bg-gradient-to-r from-green-700 to-green-800 text-white text-[10px] font-bold rounded-full w-5 h-5 flex items-center justify-center shadow-lg animate-bounce">{{ session.get('cart')|length }}</span>
                         {% endif %}
                     </a>
                     
+                    <!-- User Menu -->
                     {% if session.get('user_id') %}
                     <div class="relative group">
-                        <button class="text-gray-600 hover:text-primary transition">
-                            <i class="fas fa-user text-xl"></i>
+                        <button class="w-10 h-10 rounded-full bg-gradient-to-br from-green-700 to-green-800 text-white flex items-center justify-center font-bold shadow-lg hover:shadow-xl transition-all">
+                            {{ session.get('customer_name', 'U')[:1]|upper }}
                         </button>
-                        <div class="absolute right-0 mt-2 w-48 bg-white shadow-lg rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all z-50">
-                            <a href="{{ url_for('my_orders') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">My Orders</a>
-                            <a href="{{ url_for('logout') }}" class="block px-4 py-2 text-gray-700 hover:bg-gray-100">Logout</a>
+                        <div class="absolute right-0 top-full mt-2 w-64 bg-white shadow-2xl rounded-2xl opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50 overflow-hidden">
+                            <div class="p-4 bg-gradient-to-r from-green-700 to-green-800 text-white">
+                                <p class="font-bold">{{ session.get('customer_name', 'User') }}</p>
+                                <p class="text-sm opacity-80">{{ session.get('customer_email', '') }}</p>
+                            </div>
+                            <div class="p-2">
+                                <a href="{{ url_for('my_orders') }}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-green-50 text-gray-600 hover:text-green-700 transition-all">
+                                    <i class="fas fa-box w-5"></i> My Orders
+                                </a>
+                                <a href="{{ url_for('logout') }}" class="flex items-center gap-3 p-3 rounded-xl hover:bg-red-50 text-red-500 transition-all">
+                                    <i class="fas fa-sign-out-alt w-5"></i> Logout
+                                </a>
+                            </div>
                         </div>
                     </div>
                     {% else %}
-                    <a href="{{ url_for('login') }}" class="text-gray-600 hover:text-primary transition">Login</a>
+                    <a href="{{ url_for('login') }}" class="hidden md:flex items-center gap-2 bg-gradient-to-r from-green-700 to-green-800 hover:from-green-800 hover:to-green-900 text-white px-5 py-2.5 rounded-full font-semibold transition-all shadow-lg hover:shadow-xl">
+                        <i class="fas fa-user"></i> Login
+                    </a>
                     {% endif %}
                     
-                    <button id="translate-btn" class="text-gray-600 hover:text-primary transition flex items-center gap-1" title="Translate to Hindi">
-                        <i class="fas fa-language text-xl"></i>
+                    <!-- Mobile Menu Button -->
+                    <button id="mobile-menu-btn" class="lg:hidden w-10 h-10 rounded-full bg-gray-50 text-gray-600 flex items-center justify-center">
+                        <i class="fas fa-bars"></i>
                     </button>
-                    
-                    <a href="{{ url_for('admin_dashboard') }}" class="text-gray-400 hover:text-gray-600 transition" title="Admin">
-                        <i class="fas fa-cog text-xl"></i>
-                    </a>
                 </div>
+            </div>
+        </div>
+        
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="hidden lg:hidden bg-white border-t">
+            <div class="container mx-auto px-4 py-4">
+                <form action="{{ url_for('search') }}" method="get" class="mb-4">
+                    <div class="relative">
+                        <input type="text" name="q" placeholder="Search products..." class="w-full border-2 border-gray-100 rounded-full px-5 py-2.5 pl-12 focus:outline-none focus:border-green-700">
+                        <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-400"></i>
+                    </div>
+                </form>
+                <nav class="space-y-2">
+                    <a href="{{ url_for('index') }}" class="flex items-center gap-3 py-3 px-4 rounded-xl bg-gray-50 text-gray-700 font-medium">
+                        <i class="fas fa-home w-5"></i> Home
+                    </a>
+                    {% for cat in g.categories if g.categories %}
+                    <a href="{{ url_for('category', category=cat) }}" class="flex items-center gap-3 py-3 px-4 rounded-xl hover:bg-gray-50 text-gray-600">
+                        <i class="fas fa-circle text-[8px] text-green-700 w-5"></i> {{ cat }}
+                    </a>
+                    {% endfor %}
+                    {% if not session.get('user_id') %}
+                    <a href="{{ url_for('login') }}" class="flex items-center gap-3 py-3 px-4 rounded-xl bg-gradient-to-r from-green-700 to-green-800 text-white font-medium">
+                        <i class="fas fa-user w-5"></i> Login
+                    </a>
+                    {% endif %}
+                </nav>
             </div>
         </div>
     </header>
@@ -77,7 +299,8 @@
         {% if messages %}
         <div class="container mx-auto px-4 mt-4">
             {% for category, message in messages %}
-            <div class="p-4 mb-2 rounded-lg {% if category == 'success' %}bg-green-100 text-green-700 border border-green-400{% else %}bg-red-100 text-red-700 border border-red-400{% endif %}">
+            <div class="p-4 mb-2 rounded-xl shadow-lg {% if category == 'success' %}bg-green-50 text-green-700 border border-green-200{% else %}bg-red-50 text-red-700 border border-red-200{% endif %} flex items-center gap-3">
+                <i class="{% if category == 'success' %}fas fa-check-circle text-green-500{% else %}fas fa-exclamation-circle text-red-500{% endif %}"></i>
                 {{ message }}
             </div>
             {% endfor %}
@@ -89,109 +312,135 @@
         {% block content %}{% endblock %}
     </main>
     
-    <footer class="bg-gray-800 text-white mt-12">
-        <div class="container mx-auto px-4 py-8">
-            <div class="grid grid-cols-1 md:grid-cols-4 gap-8">
+    <footer class="gradient-primary text-white">
+        <div class="container mx-auto px-4 py-16">
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-10">
                 <div>
-                    <h3 class="text-xl font-bold mb-4">Henri</h3>
-                    <p class="text-gray-400">Your trusted destination for beauty and skincare products.</p>
+                    <h3 class="text-2xl font-bold mb-4"><span class="text-green-300">Henry's</span> Store</h3>
+                    <p class="text-green-200 mb-6">Your trusted destination for premium beauty and skincare products. Quality products at affordable prices.</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-green-600 transition">
+                            <i class="fab fa-facebook-f"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-green-600 transition">
+                            <i class="fab fa-instagram"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-green-600 transition">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="#" class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center hover:bg-green-600 transition">
+                            <i class="fab fa-whatsapp"></i>
+                        </a>
+                    </div>
                 </div>
                 <div>
-                    <h4 class="font-semibold mb-4">Quick Links</h4>
-                    <ul class="space-y-2 text-gray-400">
+                    <h4 class="font-semibold mb-4 text-lg">Quick Links</h4>
+                    <ul class="space-y-3 text-green-200">
                         <li><a href="{{ url_for('index') }}" class="hover:text-white transition">Home</a></li>
                         <li><a href="{{ url_for('cart') }}" class="hover:text-white transition">Cart</a></li>
-                        <li><a href="{{ url_for('my_orders') }}" class="hover:text-white transition">My Orders</a></li>
+                        <li><a href="{{ url_for('checkout') }}" class="hover:text-white transition">Checkout</a></li>
+                        <li><a href="{{ url_for('my_orders') }}" class="hover:text-white transition">Track Order</a></li>
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-semibold mb-4">Categories</h4>
-                    <ul class="space-y-2 text-gray-400">
+                    <h4 class="font-semibold mb-4 text-lg">Categories</h4>
+                    <ul class="space-y-3 text-green-200">
                         {% for cat in g.categories[:5] if g.categories %}
                         <li><a href="{{ url_for('category', category=cat) }}" class="hover:text-white transition">{{ cat }}</a></li>
                         {% endfor %}
                     </ul>
                 </div>
                 <div>
-                    <h4 class="font-semibold mb-4">Contact</h4>
-                    <ul class="space-y-2 text-gray-400">
-                        <li><i class="fas fa-envelope mr-2"></i>contact@henri.com</li>
-                        <li><i class="fas fa-phone mr-2"></i>+91 1234567890</li>
+                    <h4 class="font-semibold mb-4 text-lg">Contact Us</h4>
+                    <ul class="space-y-3 text-green-200">
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-envelope text-green-300"></i>
+                            <span>contact@henristore.com</span>
+                        </li>
+                        <li class="flex items-center gap-3">
+                            <i class="fas fa-phone text-green-300"></i>
+                            <span>+91 98765 43210</span>
+                        </li>
+                        <li class="flex items-start gap-3">
+                            <i class="fas fa-map-marker-alt text-green-300 mt-1"></i>
+                            <span>Mumbai, Maharashtra, India</span>
+                        </li>
                     </ul>
+                    <div class="mt-6">
+                        <h5 class="font-medium mb-3">We Accept</h5>
+                        <div class="flex items-center gap-3 text-green-200">
+                            <i class="fab fa-cc-visa text-2xl"></i>
+                            <i class="fab fa-cc-mastercard text-2xl"></i>
+                            <i class="fab fa-google-pay text-2xl"></i>
+                            <i class="fab fa-apple-pay text-2xl"></i>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="border-t border-gray-700 mt-8 pt-8 text-center text-gray-400">
-                <p>&copy; 2024 Henri. All rights reserved.</p>
+            <div class="border-t border-green-700 mt-12 pt-8">
+                <div class="flex flex-col md:flex-row items-center justify-between gap-4">
+                    <p class="text-green-200 text-sm">© 2024 Henry's Store. All rights reserved.</p>
+                    <div class="flex items-center gap-6 text-sm text-green-200">
+                        <a href="#" class="hover:text-white transition">Privacy Policy</a>
+                        <a href="#" class="hover:text-white transition">Terms of Service</a>
+                        <a href="#" class="hover:text-white transition">Refund Policy</a>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>
     
-    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-    <script type="text/javascript">
-    function googleTranslateElementInit() {
-        new google.translate.TranslateElement({
-            pageLanguage: 'en',
-            includedLanguages: 'hi',
-            layout: google.translate.TranslateElement.InlineLayout.HORIZONTAL,
-            autoDisplay: false
-        }, 'google_translate_element');
-    }
-    </script>
-    <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-    
-    <div id="google_translate_element" style="display:none;"></div>
-    
-    <div id="chatbot-toggle" class="fixed bottom-6 right-6 bg-primary text-white w-14 h-14 rounded-full flex items-center justify-center cursor-pointer shadow-lg hover:bg-secondary transition z-50" style="position: fixed; bottom: 24px; right: 24px; z-index: 9999;">
-        <i class="fas fa-comments text-xl"></i>
+    <div id="chatbot-toggle" class="fixed bottom-6 right-6 gradient-accent text-white w-16 h-16 rounded-full flex items-center justify-center cursor-pointer shadow-2xl hover:scale-110 transition z-50">
+        <i class="fas fa-headset text-2xl"></i>
     </div>
     
-    <div id="chatbot-container" style="position: fixed; bottom: 96px; right: 24px; width: 384px; max-width: calc(100vw - 3rem); z-index: 9999; display: none;">
-        <div class="bg-primary text-white p-4 rounded-t-lg flex justify-between items-center">
-            <h3 class="font-semibold">Henri Assistant</h3>
-            <button id="chatbot-close" class="text-white hover:text-gray-200">
-                <i class="fas fa-times"></i>
+    <div id="chatbot-container" style="position: fixed; bottom: 100px; right: 24px; width: 380px; max-width: calc(100vw - 3rem); z-index: 9999; display: none;">
+        <div class="gradient-primary text-white p-4 rounded-t-2xl flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-full bg-green-400/30 flex items-center justify-center">
+                    <i class="fas fa-robot"></i>
+                </div>
+                <div>
+                    <h3 class="font-semibold">Henry's Assistant</h3>
+                    <p class="text-xs text-green-200">Online • Ready to help</p>
+                </div>
+            </div>
+            <button id="chatbot-close" class="text-green-200 hover:text-white">
+                <i class="fas fa-times text-xl"></i>
             </button>
         </div>
         <div id="chatbot-messages" class="h-80 overflow-y-auto p-4 space-y-3 bg-gray-50" style="height: 320px;">
-            <div class="bg-white p-3 rounded-lg shadow-sm border">
-                <p class="text-sm">Hi! I'm Henri's assistant. Ask me about our products or any health/skincare concerns!</p>
+            <div class="bg-white p-4 rounded-xl shadow-sm border border-green-100">
+                <div class="flex items-center gap-2 mb-2">
+                    <span class="text-xs font-medium text-green-700">Henry's Bot</span>
+                </div>
+                <p class="text-sm text-gray-600">Hi! I'm Henry's assistant. Ask me about our products, skincare routines, or any concerns you have!</p>
             </div>
         </div>
-        <div class="p-3 border-t bg-white rounded-b-lg">
+        <div class="p-4 border-t bg-white rounded-b-2xl shadow-lg">
             <form id="chatbot-form" class="flex gap-2">
-                <input type="text" id="chatbot-input" placeholder="Type your message..." class="flex-1 border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:border-primary text-sm">
-                <button type="submit" class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-secondary transition">
+                <input type="text" id="chatbot-input" placeholder="Type your message..." class="flex-1 border border-gray-200 rounded-xl px-4 py-3 focus:outline-none focus:border-green-500 text-sm">
+                <button type="submit" class="btn-primary text-white px-5 py-3 rounded-xl hover:opacity-90 transition flex items-center justify-center">
                     <i class="fas fa-paper-plane"></i>
                 </button>
             </form>
         </div>
     </div>
     
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    
     <script>
-        document.getElementById('translate-btn').addEventListener('click', function() {
-            var select = document.querySelector('.goog-te-combo');
-            if (select) {
-                select.value = 'hi';
-                select.dispatchEvent(new Event('change'));
+        document.getElementById('mobile-menu-btn').addEventListener('click', function() {
+            var menu = document.getElementById('mobile-menu');
+            var icon = this.querySelector('i');
+            if (menu.classList.contains('hidden')) {
+                menu.classList.remove('hidden');
+                icon.classList.remove('fa-bars');
+                icon.classList.add('fa-times');
             } else {
-                var container = document.getElementById('google_translate_element');
-                container.style.display = 'block';
-                container.style.position = 'fixed';
-                container.style.top = '80px';
-                container.style.right = '20px';
-                container.style.zIndex = '9999';
-                container.style.background = 'white';
-                container.style.padding = '10px';
-                container.style.borderRadius = '8px';
-                container.style.boxShadow = '0 2px 10px rgba(0,0,0,0.2)';
-                
-                if (window.google && google.translate) {
-                    var translateElement = new google.translate.TranslateElement({
-                        pageLanguage: 'en',
-                        includedLanguages: 'hi',
-                        layout: google.translate.TranslateElement.InlineLayout.VERTICAL
-                    }, 'google_translate_element');
-                }
+                menu.classList.add('hidden');
+                icon.classList.remove('fa-times');
+                icon.classList.add('fa-bars');
             }
         });
         
@@ -204,11 +453,7 @@
             var messages = document.getElementById('chatbot-messages');
             
             toggle.addEventListener('click', function() {
-                if (container.style.display === 'none') {
-                    container.style.display = 'block';
-                } else {
-                    container.style.display = 'none';
-                }
+                container.style.display = container.style.display === 'none' ? 'block' : 'none';
             });
             
             closeBtn.addEventListener('click', function() {
@@ -221,24 +466,22 @@
                 if (!message) return;
                 
                 var userMsg = document.createElement('div');
-                userMsg.className = 'bg-primary text-white p-3 rounded-lg shadow-sm ml-8';
+                userMsg.className = 'bg-gradient-to-r from-green-600 to-green-700 text-white p-4 rounded-xl shadow-sm ml-12';
                 userMsg.innerHTML = '<p class="text-sm">' + message + '</p>';
                 messages.appendChild(userMsg);
                 input.value = '';
                 messages.scrollTop = messages.scrollHeight;
                 
                 var loading = document.createElement('div');
-                loading.className = 'bg-white p-3 rounded-lg shadow-sm border mr-8';
+                loading.className = 'bg-white p-4 rounded-xl shadow-sm border mr-12';
                 loading.id = 'loading';
-                loading.innerHTML = '<p class="text-sm text-gray-500">Thinking...</p>';
+                loading.innerHTML = '<div class="flex items-center gap-2"><div class="w-2 h-2 rounded-full bg-green-600 animate-bounce"></div><div class="w-2 h-2 rounded-full bg-green-600 animate-bounce" style="animation-delay: 0.1s"></div><div class="w-2 h-2 rounded-full bg-green-600 animate-bounce" style="animation-delay: 0.2s"></div></div>';
                 messages.appendChild(loading);
                 messages.scrollTop = messages.scrollHeight;
                 
                 fetch('/chat', {
                     method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json'
-                    },
+                    headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ message: message })
                 })
                 .then(function(response) { return response.json(); })
@@ -246,8 +489,8 @@
                     var loadingEl = document.getElementById('loading');
                     if (loadingEl) loadingEl.remove();
                     var botMsg = document.createElement('div');
-                    botMsg.className = 'bg-white p-3 rounded-lg shadow-sm border mr-8';
-                    botMsg.innerHTML = '<p class="text-sm">' + data.response + '</p>';
+                    botMsg.className = 'bg-white p-4 rounded-xl shadow-sm border border-green-100 mr-12';
+                    botMsg.innerHTML = '<span class="text-xs font-medium text-green-700 mb-1 block">Henry\'s Bot</span><p class="text-sm text-gray-600">' + data.response.replace(/\n/g, '<br>') + '</p>';
                     messages.appendChild(botMsg);
                     messages.scrollTop = messages.scrollHeight;
                 })
@@ -255,13 +498,237 @@
                     var loadingEl = document.getElementById('loading');
                     if (loadingEl) loadingEl.remove();
                     var errorMsg = document.createElement('div');
-                    errorMsg.className = 'bg-red-100 text-red-700 p-3 rounded-lg shadow-sm mr-8';
+                    errorMsg.className = 'bg-red-50 text-red-700 p-4 rounded-xl shadow-sm mr-12';
                     errorMsg.innerHTML = '<p class="text-sm">Sorry, something went wrong. Please try again.</p>';
                     messages.appendChild(errorMsg);
                     messages.scrollTop = messages.scrollHeight;
                 });
             });
+            });
         });
+    </script>
+    <script>
+    var isHindi = false;
+    
+    var translations = {
+        'en': {
+            'Home': 'Home',
+            'Shop': 'Shop',
+            'Best Sellers': 'Best Sellers',
+            'Offers': 'Offers',
+            'Login': 'Login',
+            'Logout': 'Logout',
+            'My Orders': 'My Orders',
+            'Search products...': 'Search products...',
+            'Shopping Cart': 'Shopping Cart',
+            'Checkout': 'Checkout',
+            'Continue Shopping': 'Continue Shopping',
+            'Add to Cart': 'Add to Cart',
+            'Buy Now': 'Buy Now',
+            'Out of Stock': 'Out of Stock',
+            'In Stock': 'In Stock',
+            'Only': 'Only',
+            'left': 'left',
+            'Free Shipping': 'Free Shipping',
+            '100% Authentic': '100% Authentic',
+            'Easy Returns': 'Easy Returns',
+            '24/7 Support': '24/7 Support',
+            'on orders above ₹499': 'on orders above ₹499',
+            'Use code': 'Use code',
+            'for': 'for',
+            'off': 'off',
+            'Discover Your Natural Beauty': 'अपनी प्राकृतिक सुंदरता की खोज करें',
+            'Premium skincare and beauty products': 'प्रीमियम स्किनकेयर और ब्यूटी प्रोडक्ट्स',
+            'Shop Now': 'अभी खरीदें',
+            'Explore Our Collections': 'हमारे कलेक्शन देखें',
+            'All Products': 'सभी प्रोडक्ट्स',
+            'Our Collection': 'हमारा कलेक्शन',
+            'products found': 'प्रोडक्ट्स मिले',
+            'Shop by Category': 'कैटेगरी के अनुसार खरीदें',
+            'Why Choose Us': 'हमें क्यों चुनें',
+            'Customer Reviews': 'ग्राहक समीक्षाएं',
+            'What Our Customers Say': 'हमारे ग्राहक क्या कहते हैं',
+            'Order Summary': 'ऑर्डर सारांश',
+            'Subtotal': 'सबटोटल',
+            'Shipping': 'शिपिंग',
+            'Total': 'कुल',
+            'Place Order': 'ऑर्डर करें',
+            'Full Name': 'पूरा नाम',
+            'Phone Number': 'फोन नंबर',
+            'Email Address': 'ईमेल पता',
+            'Shipping Address': 'शिपिंग पता',
+            'Payment Method': 'पेमेंट मेथड',
+            'Cash on Delivery': 'कैश ऑन डिलीवरी',
+            'Pay when you receive your order': 'ऑर्डर मिलने पर पेमेंट करें',
+            'Online Payment': 'ऑनलाइन पेमेंट',
+            'Pay via UPI, Cards, or Net Banking': 'UPI, कार्ड या नेट बैंकिंग से पेमेंट करें',
+            'Order Notes': 'ऑर्डर नोट्स',
+            'Your cart is empty': 'आपका कार्ट खाली है',
+            'Your trusted destination for beauty and skincare products': 'ब्यूटी और स्किनकेयर प्रोडक्ट्स के लिए आपका भरोसेमंद गंतव्य',
+            'Quick Links': 'क्विक लिंक्स',
+            'Categories': 'कैटेगरीज़',
+            'Contact Us': 'संपर्क करें',
+            'All rights reserved': 'सर्वाधिकार सुरक्षित',
+            'Create Account': 'अकाउंट बनाएं',
+            'Join Henry Store today': 'आज Henry Store में शामिल हों',
+            'Password': 'पासवर्ड',
+            'Confirm Password': 'पासवर्ड की पुष्टि करें',
+            'I agree to the': 'मैं सहमत हूं',
+            'Terms of Service': 'सेवा की शर्तों से',
+            'Privacy Policy': 'गोपनीयता नीति',
+            'Already have an account': 'पहले से अकाउंट है',
+            'Sign in': 'साइन इन करें',
+            'Track Order': 'ऑर्डर ट्रैक करें',
+            'Order Confirmed': 'ऑर्डर की पुष्टि',
+            'Thank you for shopping with Henry Store': 'Henry Store से खरीदारी करने के लिए धन्यवाद',
+            'Delivery Address': 'डिलीवरी पता',
+            'Payment Details': 'पेमेंट डिटेल्स',
+            'Order Items': 'ऑर्डर आइटम्स',
+            'Whats Next': 'आगे क्या',
+            'Well send you an email confirmation': 'हम आपको ईमेल कन्फर्मेशन भेजेंगे',
+            'Your order will be shipped within 1-2 business days': 'आपका ऑर्डर 1-2 बिज़नेस डेज़ में शिप होगा',
+            'Write a Review': 'समीक्षा लिखें',
+            'Your Name': 'आपका नाम',
+            'Rating': 'रेटिंग',
+            'Your Review': 'आपकी समीक्षा',
+            'Submit Review': 'समीक्षा सबमिट करें',
+            'Description': 'विवरण',
+            'Benefits': 'फायदे',
+            'How to Use': 'कैसे उपयोग करें',
+            'Ingredients': 'सामग्री',
+            'Related Products': 'संबंधित प्रोडक्ट्स',
+            'Add to wishlist': 'विशलिस्ट में जोड़ें',
+            'Share': 'शेयर करें',
+            'Quantity': 'मात्रा',
+            'Price': 'Price',
+            'reviews': 'समीक्षाएं',
+        },
+        'hi': {
+            'Home': 'होम',
+            'Shop': 'खरीदें',
+            'Best Sellers': 'बेस्ट सेलर्स',
+            'Offers': 'ऑफर्स',
+            'Login': 'लॉगिन',
+            'Logout': 'लॉगआउट',
+            'My Orders': 'मेरे ऑर्डर',
+            'Search products...': 'प्रोडक्ट्स खोजें...',
+            'Shopping Cart': 'शॉपिंग कार्ट',
+            'Checkout': 'चेकआउट',
+            'Continue Shopping': 'खरीदारी जारी रखें',
+            'Add to Cart': 'कार्ट में जोड़ें',
+            'Buy Now': 'अभी खरीदें',
+            'Out of Stock': 'स्टॉक में नहीं',
+            'In Stock': 'स्टॉक में',
+            'Only': 'केवल',
+            'left': 'बचे',
+            'Free Shipping': 'फ्री शिपिंग',
+            '100% Authentic': '100% असली',
+            'Easy Returns': 'आसान रिटर्न',
+            '24/7 Support': '24/7 सपोर्ट',
+            'on orders above ₹499': '₹499 से ऊपर के ऑर्डर पर',
+            'Use code': 'कोड यूज़ करें',
+            'for': 'पर',
+            'off': 'छूट',
+            'Discover Your Natural Beauty': 'अपनी प्राकृतिक सुंदरता की खोज करें',
+            'Premium skincare and beauty products': 'प्रीमियम स्किनकेयर और ब्यूटी प्रोडक्ट्स',
+            'Shop Now': 'अभी खरीदें',
+            'Explore Our Collections': 'हमारे कलेक्शन देखें',
+            'All Products': 'सभी प्रोडक्ट्स',
+            'Our Collection': 'हमारा कलेक्शन',
+            'products found': 'प्रोडक्ट्स मिले',
+            'Shop by Category': 'कैटेगरी के अनुसार खरीदें',
+            'Why Choose Us': 'हमें क्यों चुनें',
+            'Customer Reviews': 'ग्राहक समीक्षाएं',
+            'What Our Customers Say': 'हमारे ग्राहक क्या कहते हैं',
+            'Order Summary': 'ऑर्डर सारांश',
+            'Subtotal': 'सबटोटल',
+            'Shipping': 'शिपिंग',
+            'Total': 'कुल',
+            'Place Order': 'ऑर्डर करें',
+            'Full Name': 'पूरा नाम',
+            'Phone Number': 'फोन नंबर',
+            'Email Address': 'ईमेल पता',
+            'Shipping Address': 'शिपिंग पता',
+            'Payment Method': 'पेमेंट मेथड',
+            'Cash on Delivery': 'कैश ऑन डिलीवरी',
+            'Pay when you receive your order': 'ऑर्डर मिलने पर पेमेंट करें',
+            'Online Payment': 'ऑनलाइन पेमेंट',
+            'Pay via UPI, Cards, or Net Banking': 'UPI, कार्ड या नेट बैंकिंग से पेमेंट करें',
+            'Order Notes': 'ऑर्डर नोट्स',
+            'Your cart is empty': '�प आपका कार्ट खाली है',
+            'Your trusted destination for beauty and skincare products': 'ब्यूटी और स्किनकेयर प्रोडक्ट्स के लिए आपका भरोसेमंद गंतव्य',
+            'Quick Links': 'क्विक लिंक्स',
+            'Categories': 'कैटेगरीज़',
+            'Contact Us': 'संपर्क करें',
+            'All rights reserved': 'सर्वाधिकार सुरक्षित',
+            'Create Account': 'अकाउंट बनाएं',
+            'Join Henry Store today': 'आज Henry Store में शामिल हों',
+            'Password': 'पासवर्ड',
+            'Confirm Password': 'पासवर्ड की पुष्टि करें',
+            'I agree to the': 'मैं सहमत हूं',
+            'Terms of Service': 'सेवा की शर्तों से',
+            'Privacy Policy': 'गोपनीयता नीति',
+            'Already have an account': 'पहले से अकाउंट है',
+            'Sign in': 'साइन इन करें',
+            'Track Order': 'ऑर्डर ट्रैक करें',
+            'Order Confirmed': 'ऑर्डर की पुष्टि',
+            'Thank you for shopping with Henry Store': 'Henry Store से खरीदारी करने के लिए धन्यवाद',
+            'Delivery Address': 'डिलीवरी पता',
+            'Payment Details': 'पेमेंट डिटेल्स',
+            'Order Items': 'ऑर्डर आइटम्स',
+            'Whats Next': 'आगे क्या',
+            'Well send you an email confirmation': 'हम आपको ईमेल कन्फर्मेशन भेजेंगे',
+            'Your order will be shipped within 1-2 business days': 'आपका ऑर्डर 1-2 बिज़नेस डेज़ में शिप होगा',
+            'Write a Review': 'समीक्षा लिखें',
+            'Your Name': 'आपका नाम',
+            'Rating': 'रेटिंग',
+            'Your Review': 'आपकी समीक्षा',
+            'Submit Review': 'समीक्षा सबमिट करें',
+            'Description': 'विवरण',
+            'Benefits': 'फायदे',
+            'How to Use': 'कैसे उपयोग करें',
+            'Ingredients': 'सामग्री',
+            'Related Products': 'संबंधित प्रोडक्ट्स',
+            'Add to wishlist': 'विशलिस्ट में जोड़ें',
+            'Share': 'शेयर करें',
+            'Quantity': 'मात्रा',
+            'Price': 'कीमत',
+            'reviews': 'समीक्षाएं',
+        }
+    };
+    
+    function translateText(element, lang) {
+        if (element.childNodes.length) {
+            element.childNodes.forEach(function(node) {
+                if (node.nodeType === 3 && node.textContent.trim()) {
+                    var text = node.textContent.trim();
+                    if (translations[lang][text]) {
+                        node.textContent = translations[lang][text];
+                    }
+                } else if (node.nodeType === 1) {
+                    var tagName = node.tagName.toLowerCase();
+                    if (tagName !== 'script' && tagName !== 'style' && tagName !== 'img' && tagName !== 'input') {
+                        translateText(node, lang);
+                    }
+                }
+            });
+        }
+    }
+    
+    function toggleLanguage() {
+        var langText = document.getElementById('lang-text');
+        var flagIcon = document.getElementById('flag-icon');
+        var body = document.body;
+        
+        if (!isHindi) {
+            translateText(body, 'hi');
+            langText.textContent = 'English';
+            flagIcon.textContent = '🇬🇧';
+            isHindi = true;
+        } else {
+            location.reload();
+        }
+    }
     </script>
     {% block extra_js %}{% endblock %}
 </body>
