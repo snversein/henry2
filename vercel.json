@@ -8,18 +8,11 @@
   ],
   "routes": [
     {
-      "src": "/static/images/(.*)",
-      "headers": {
-        "Cache-Control": "public, max-age=2592000"
-      },
-      "dest": "/static/images/$1"
-    },
-    {
       "src": "/static/(.*)",
-      "dest": "/static/$1"
+      "dest": "app.py"
     },
     {
-      "src": "/(.*)",
+      "src": "/.*",
       "dest": "app.py"
     }
   ]

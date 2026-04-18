@@ -145,6 +145,10 @@ def load_categories():
     categories = Product.objects.distinct('category')
     g.categories = categories
 
+@app.route('/static/<path:filename>')
+def serve_static(filename):
+    return send_from_directory(app.static_folder, filename)
+
 @app.route('/')
 def index():
     products = Product.objects(is_active=True)
