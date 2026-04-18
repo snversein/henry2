@@ -14,11 +14,12 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify
+from flask import Flask, render_template, request, redirect, url_for, flash, session, jsonify, send_from_directory
 import mongoengine
 from mongoengine import Document, StringField, FloatField, BooleanField, DateTimeField, ObjectIdField, ListField, DictField, ReferenceField
+import os
 
-app = Flask(__name__)
+app = Flask(__name__, static_folder='static', static_url_path='/static')
 app.config['SECRET_KEY'] = os.environ.get('SECRET_KEY', 'henri-secret-key-change-in-production')
 
 db_uri = os.environ.get('DATABASE_URL', '')
